@@ -9,5 +9,7 @@ echo "Received message to build branch dev"
 # http://stackoverflow.com/questions/1386291/git-git-dir-not-working-as-expected
 git -C "/home/ubuntu/Complexity" checkout "dev"
 git -C "/home/ubuntu/Complexity" pull
+# clean build
 rm -rf "/home/ubuntu/Complexity/node_modules"
-npm install "/home/ubuntu/Complexity"
+# build
+npm --prefix /home/ubuntu/Complexity install /home/ubuntu/Complexity
