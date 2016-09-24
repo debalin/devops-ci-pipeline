@@ -9,7 +9,7 @@ app.get('/', function (req, res) {
 
 app.post('/postreceive', function (req, res) {
   console.log('in postreceive post');
-  var branch = req.ref;
+  var branch = req.payload.ref;
   console.log("Branch = " + branch);
   child = exec("./scripts/build-dev", function (error, stdout, stderr) {
     console.log('stdout: ' + stdout);
