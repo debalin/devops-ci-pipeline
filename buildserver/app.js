@@ -3,6 +3,7 @@ var app = express();
 var exec = require('child_process').exec;
 var child;
 
+
 app.get('/', function (req, res) {
   res.send('Hello World!');
 });
@@ -10,7 +11,6 @@ app.get('/', function (req, res) {
 app.post('/postreceive', function (req, res) {
   console.log('in postreceive post');
   var branch = req;
-  console.log("Branch = " + branch);
   child = exec("./scripts/build-dev", function (error, stdout, stderr) {
     console.log('stdout: ' + stdout);
     console.log('stderr: ' + stderr);
