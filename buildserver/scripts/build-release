@@ -11,5 +11,6 @@ git -C "/home/ubuntu/Complexity" checkout "release"
 git -C "/home/ubuntu/Complexity" pull
 # clean build
 rm -rf "/home/ubuntu/Complexity/node_modules"
+rm -rf "/home/ubuntu/Complexity/etc"
 # build
 npm --prefix /home/ubuntu/Complexity install /home/ubuntu/Complexity
