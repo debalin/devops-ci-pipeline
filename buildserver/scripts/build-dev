@@ -1,5 +1,5 @@
 #!/bin/sh
-#
+# MAKE SURE TO CHMOD 0755 THESE SO SERVER CAN EXECUTE THEM
 # build script to run branch dev
 # ian drosos
 
