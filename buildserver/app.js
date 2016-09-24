@@ -8,9 +8,21 @@ app.get('/', function (req, res) {
 });
 
 app.post('/postreceive', function (req, res) {
-  console.log(req);
-  console.log(res);
-  res.send('after push!');
+  console.log('in postreceive post');
+  var branch = req.ref;
+  console.log("Branch = " + branch);
+  child = exec("./scripts/build-dev", function (error, stdout, stderr) {
+    console.log('stdout: ' + stdout);
+    console.log('stderr: ' + stderr);
+    if (error !== null) {
+      console.log('exec error: ' + error);
+      console.error('exec error: ' + error);
+      res.send('dev branch build ERROR (check logs)');
+    } else {
+      console.log('dev BUILD SUCCESSFUL (DO STUFF)');
+      res.send('dev branch build SUCCESS (do stuff)');
+    }
+  });
 });
 
 app.get('/dev', function (req, res) {
