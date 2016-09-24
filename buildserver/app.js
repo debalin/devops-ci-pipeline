@@ -25,6 +25,7 @@ app.get('/dev', function (req, res) {
 
 app.get('/release', function (req, res) {
   console.log('in release get');
+  child = exec("./scripts/build-release", function (error, stdout, stderr) {
     console.log('stdout: ' + stdout);
     console.log('stderr: ' + stderr);
     if (error !== null) {
