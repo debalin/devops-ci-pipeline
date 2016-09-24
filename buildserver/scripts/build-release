@@ -1,0 +1,12 @@
+#!/bin/sh
+#
+# build script to run branch release
+# ian drosos
+
+echo "Received message to build branch release"
+
+# checkout branch
+# http://stackoverflow.com/questions/1386291/git-git-dir-not-working-as-expected
+git -C "/home/ubuntu/Complexity" checkout "release"
+git -C "/home/ubuntu/Complexity" pull
+npm install "/home/ubuntu/Complexity"
