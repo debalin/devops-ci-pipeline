@@ -7,6 +7,12 @@ app.get('/', function (req, res) {
   res.send('Hello World!');
 });
 
+app.post('/postreceive', function (req, res) {
+  console.log(req);
+  console.log(res);
+  res.send('after push!');
+});
+
 app.get('/dev', function (req, res) {
   console.log('in dev get');
   child = exec("./scripts/build-dev", function (error, stdout, stderr) {
