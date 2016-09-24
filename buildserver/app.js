@@ -5,7 +5,7 @@ var child;
 var bodyParser = require('body-parser');
 
 app.use(bodyParser.urlencoded({
-	extended: true
+  extended: true
 }));
 
 app.use(bodyParser.json());
@@ -15,10 +15,10 @@ app.get('/', function (req, res) {
 });
 
 app.post('/postreceive', function (req, res) {
-  console.log('in postreceive post'); 
+  console.log('in postreceive post');
   var branch = req.body.ref;
   console.log(branch);
-  if (branch === "refs/head/dev") {
+  if (branch === "refs/heads/dev") {
     child = exec("./scripts/build-dev", function (error, stdout, stderr) {
       console.log('stdout: ' + stdout);
       console.log('stderr: ' + stderr);
@@ -30,8 +30,8 @@ app.post('/postreceive', function (req, res) {
         console.log('dev BUILD SUCCESSFUL (DO STUFF)');
         res.send('dev branch build SUCCESS (do stuff)');
       }
-    });	
-  } else if (branch === "refs/head/release") {
+    });
+  } else if (branch === "refs/heads/release") {
     child = exec("./scripts/build-release", function (error, stdout, stderr) {
       console.log('stdout: ' + stdout);
       console.log('stderr: ' + stderr);
@@ -44,9 +44,9 @@ app.post('/postreceive', function (req, res) {
       }
     });
   } else {
-	console.log("NOT IN ACCEPTABLE BRANCH, NO BUILD");
-	res.send("NOT DEV OR RELEASE, NO BUILD");
-  } 
+    console.log("NOT IN ACCEPTABLE BRANCH, NO BUILD");
+    res.send("NOT DEV OR RELEASE, NO BUILD");
+  }
 });
 
 app.get('/dev', function (req, res) {
