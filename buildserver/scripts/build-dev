@@ -3,14 +3,19 @@
 # build script to run branch dev
 # ian drosos
 
-echo "Received message to build branch dev"
+echo "Running build script.\n"
 
 # checkout branch
 # http://stackoverflow.com/questions/1386291/git-git-dir-not-working-as-expected
 git -C "/home/ubuntu/Complexity" checkout "dev"
 git -C "/home/ubuntu/Complexity" pull
+echo "Pulled latest code.\n"
+
 # clean build
 rm -rf "/home/ubuntu/Complexity/node_modules"
 rm -rf "/home/ubuntu/Complexity/etc"
+echo "Cleaned working directory."
+
 # build
+echo "Starting build."
 npm --prefix /home/ubuntu/Complexity install /home/ubuntu/Complexity

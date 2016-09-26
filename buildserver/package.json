@@ -1,0 +1,15 @@
+{
+  "name": "devops-milestone1",
+  "version": "1.0.0",
+  "description": "DevOps milestone 1. Configuring a build server.",
+  "main": "app.js",
+  "author": "Ian Drosos, Kunal Kapoor, Pratik Mukherjee, Debalin Das",
+  "license": "ISC",
+  "repository" : { 
+  	"type" : "git",
+  	"url" : "https://github.com/debalin/devops-milestone1.git"
+  },
+  "dependencies": {
+    "express": "latest"
+  }
+}
