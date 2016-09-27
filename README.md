@@ -17,11 +17,12 @@ This repository holds the first milestone build for the DevOps (CSC 591) course 
 ### Submission
 - Code
   - in buildserver folder
-- Team Member Unity IDs
+- Team Member Unity IDs and Contributions
   - ddas4 (Debalin Das)
   - kkapoor (Kunal Kapoor)
   - pmukher (Pratik Mukherjee)
   - izdrosos (Ian Drosos)
+    - post-receive and post-commit hooks, app.js express hooks to catch pushes to repo and run scripts, build scripts, multiple branches trigger multiple build scripts
 - README.md 
   - this file
 - screencast
