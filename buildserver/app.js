@@ -148,7 +148,7 @@ function getCurrentTimeInISO() {
 
 //helper function to send emails
 function sendEmail(logFilePath, branch, buildSuccess) {
-  var execQuery = "./scripts/send_email logs/" + logFilePath + " " + branch + " " + buildSuccess;
+  var execQuery = "./scripts/send_email " + logFilePath + " " + branch + " " + buildSuccess;
   var child = exec(execQuery, function(error, stdout, stderr) {
     if (error !== null) {
       fs.appendFileSync(logFilePath, "\n" + stderr);
