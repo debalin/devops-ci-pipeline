@@ -17,7 +17,7 @@ This repository holds the first milestone build for the DevOps (CSC 591) course 
 ### Submission
 - Code
   - in buildserver folder
-- Unity IDs and Contribution
+- Team Member Unity IDs
   - ddas4 (Debalin Das)
   - kkapoor (Kunal Kapoor)
   - pmukher (Pratik Mukherjee)
