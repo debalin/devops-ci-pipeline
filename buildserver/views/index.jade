@@ -1,28 +1,31 @@
+# using bootstrap theme Cerulean - https://bootswatch.com/cerulean/
 extends layout
 block content
-  h2= title
-  p #[a(href="https://github.com/wddlz/Complexity") Github repository for built project] 
-  br
-  h3 Build history
-  div 
-    table(cellpadding="10", border="1") 
-      thead
-        tr 
-          th Date
-          th Log File
-          th Build Status
-          th Branch
-      tbody
-        each build, i in data
-          tr 
-            td #{build.date}
-            td 
-              a(href='/' + build.link) #{build.link}
-            td 
-              -if (build.status=='failure')
-                span.red #{build.status}
-              -else
-                span.green #{build.status}
-            td #{build.branch}
+  div.container.col-lg-12
+    h1= title
+    br
+    p #[a.btn.btn-default.btn-info(href="https://github.com/wddlz/Complexity") Github repository for built project] 
+    br
+    h3 Build history
+    div.col-lg-10
+      table.table.table-bordered.table-hover
+        thead
+          tr
+            th Date
+            th Log File
+            th Build Status
+            th Branch
+        tbody
+          each build, i in data
+            -if (!build.link.includes('style.css'))
+              tr 
+                td #{build.date}
+                td 
+                  a(href='/' + build.link) #{build.link}
+                -if (build.status=='failure')
+                  td.danger #{build.status}
+                -else
+                  td.success #{build.status}
+                td #{build.branch}
           
   
