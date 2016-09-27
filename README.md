@@ -11,7 +11,7 @@ This repository holds the first milestone build for the DevOps (CSC 591) course 
     - Build scripts [```build-dev```](https://github.com/debalin/devops-milestone1/blob/master/buildserver/scripts/build_dev) and [```build-release```](https://github.com/debalin/devops-milestone1/blob/master/buildserver/scripts/build_release) called by express server handles removing old libraries, switching branches, pulling new code, and building that code.
   - The ability to determine failure or success of a build job, and as a result trigger an external event (run post-build task, send email, etc).
   - The ability to have multiple jobs corresponding to multiple branches in a repository. Specifically, a commit to a branch, release, will trigger a release build job. A commit to a branch, dev, will trigger a dev build job.
-    - The Github post-receive webhook sends the branch pushed to, based on the branch sent different build jobs are run (as long as the branch is an acceptable branch to the build server)
+    - The Github post-receive webhook sends the branch pushed to, based on the branch sent different build jobs are run from the build server [```app.js```](https://github.com/debalin/devops-milestone1/blob/master/buildserver/app.js) (as long as the branch is an acceptable branch to the build server) 
   - The ability to track and display a history of past builds (a simple list works) via http.
 
 ### Submission
