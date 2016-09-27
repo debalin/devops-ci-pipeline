@@ -1,5 +1,4 @@
 extends layout
-
 block content
   h2= title
   p #[a(href="https://github.com/wddlz/Complexity") Github repository for built project] 
@@ -19,7 +18,11 @@ block content
             td #{build.date}
             td 
               a(href='/' + build.link) #{build.link}
-            td #{build.status}
+            td 
+              -if (build.status=='failure')
+                span.red #{build.status}
+              -else
+                span.green #{build.status}
             td #{build.branch}
           
   
