@@ -20,7 +20,7 @@ app.use(express.static(path.join(__dirname, 'logs')));
 
 //processing for root request. put log list here
 app.get('/', function(req, res) {
-	fs.appendFileSync(serverLogFilePath, 'GET request for /. Will serve build history.\n');
+  fs.appendFileSync(serverLogFilePath, 'GET request for /. Will serve build history.\n');
   var files = fs.readdirSync("logs/");
   var data = [];
   for (var file of files) {
@@ -38,9 +38,9 @@ app.get('/', function(req, res) {
       status: status
     });
   }
-  res.render('index', { 
+  res.render('index', {
     title: 'Build Server',
-    data: data 
+    data: data
   });
 });
 
@@ -59,24 +59,28 @@ app.post('/postreceive', function(req, res) {
       fs.appendFileSync(logFilePath, '\nOutput in stdout:\n ' + stdout + "\n");
       fs.appendFileSync(logFilePath, '\nOutput in stderr: \n' + stderr + "\n");
       if (error !== null) {
-        fs.appendFileSync(logFilePath, 'exec error: ' + error + "\n");
+        fs.appendFileSync(logFilePath, '\nexec error: \n' + error + "\n");
         fs.appendFileSync(logFilePath, 'dev branch build error.\n');
+        sendEmail(logFilePath, "dev", false);
         res.send('dev branch build error (check logs).');
       } else {
         fs.appendFileSync(logFilePath, 'dev branch build successful.\n');
+        sendEmail(logFilePath, "dev", true);
         res.send('dev branch build successful.');
       }
     });
   } else if (branch === "refs/heads/release") {
     child = exec("./scripts/build_release", function(error, stdout, stderr) {
-      fs.appendFileSync(logFilePath, 'Output in stdout: ' + stdout + "\n");
-      fs.appendFileSync(logFilePath, 'Output in stderr: ' + stderr + "\n");
+      fs.appendFileSync(logFilePath, '\nOutput in stdout: \n' + stdout + "\n");
+      fs.appendFileSync(logFilePath, '\nOutput in stderr: \n' + stderr + "\n");
       if (error !== null) {
-        fs.appendFileSync(logFilePath, 'exec error: ' + error + "\n");
+        fs.appendFileSync(logFilePath, '\nexec error: \n' + error + "\n");
         fs.appendFileSync(logFilePath, 'release branch build error.\n');
+        sendEmail(logFilePath, "release", false);
         res.send('release branch build error (check logs).');
       } else {
         fs.appendFileSync(logFilePath, 'release branch build successful.\n');
+        sendEmail(logFilePath, "release", true);
         res.send('release branch build successful.');
       }
     });
@@ -94,14 +98,16 @@ app.get('/dev', function(req, res) {
   fs.appendFileSync(serverLogFilePath, 'GET request for /dev.\n');
 
   child = exec("./scripts/build_dev", function(error, stdout, stderr) {
-    fs.appendFileSync(logFilePath, 'Output in stdout: ' + stdout + "\n");
-    fs.appendFileSync(logFilePath, 'Output in stderr: ' + stderr + "\n");
+    fs.appendFileSync(logFilePath, '\nOutput in stdout: \n' + stdout + "\n");
+    fs.appendFileSync(logFilePath, '\nOutput in stderr: \n' + stderr + "\n");
     if (error !== null) {
-      fs.appendFileSync(logFilePath, 'exec error: ' + error + "\n");
+      fs.appendFileSync(logFilePath, '\nexec error: \n' + error + "\n");
       fs.appendFileSync(logFilePath, 'dev branch build error.\n');
+      sendEmail(logFilePath, "dev", false);
       res.send('dev branch build error (check logs).');
     } else {
       fs.appendFileSync(logFilePath, 'dev branch build successful.\n');
+      sendEmail(logFilePath, "dev", true);
       res.send('dev branch build successful.');
     }
   });
@@ -115,18 +121,19 @@ app.get('/release', function(req, res) {
   fs.appendFileSync(serverLogFilePath, 'GET request for /release.\n');
 
   child = exec("./scripts/build_release", function(error, stdout, stderr) {
-    fs.appendFileSync(logFilePath, 'Output in stdout: ' + stdout + "\n");
-    fs.appendFileSync(logFilePath, 'Output in stderr: ' + stderr + "\n");
+    fs.appendFileSync(logFilePath, '\nOutput in stdout: \n' + stdout + "\n");
+    fs.appendFileSync(logFilePath, '\nOutput in stderr: \n' + stderr + "\n");
     if (error !== null) {
-      fs.appendFileSync(logFilePath, 'exec error: ' + error + "\n");
+      fs.appendFileSync(logFilePath, '\nexec error: \n' + error + "\n");
       fs.appendFileSync(logFilePath, 'release branch build error.\n');
+      sendEmail(logFilePath, "release", false);
       res.send('release branch build error (check logs).');
     } else {
       fs.appendFileSync(logFilePath, 'release branch build successful.\n');
+      sendEmail(logFilePath, "release", true);
       res.send('release branch build successful.');
     }
   });
-  res.send('release branch build path from post-commit');
 });
 
 //server will listen on port 3000
@@ -136,5 +143,19 @@ app.listen(3000, function() {
 
 //helper function to get current time in ISO format
 function getCurrentTimeInISO() {
-  return (new Date()).toISOString();
+  return (new Date()).toISOString();    
+}
+
+//helper function to send emails
+function sendEmail(logFilePath, branch, buildSuccess) {
+  var execQuery = "./scripts/send_email logs/" + logFilePath + " " + branch + " " + buildSuccess;
+  var child = exec(execQuery, function(error, stdout, stderr) {
+    if (error !== null) {
+      fs.appendFileSync(logFilePath, "\n" + stderr);
+      fs.appendFileSync(logFilePath, "\nProblem sending email to admins.\n");
+    } else {
+      fs.appendFileSync(logFilePath, "\n" + stdout);
+      fs.appendFileSync(logFilePath, "\nEmail sent to admins.\n");
+    }
+  })
 }

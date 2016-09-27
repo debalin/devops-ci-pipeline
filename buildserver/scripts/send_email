@@ -1,0 +1,16 @@
+#!/bin/sh
+
+echo "Running mail script."
+
+IFS=''
+
+while read line
+do
+echo "Sending mail to " $line
+if ($3 eq "true") then
+	subject='Complexity status: successful for '$2' build'
+else
+	subject='Complexity status: failed for '$2' build'
+fi
+cat $1 | mail -s $subject $line  
+done < ./scripts/email_ids
