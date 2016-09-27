@@ -10,6 +10,9 @@
   	"url" : "https://github.com/debalin/devops-milestone1.git"
   },
   "dependencies": {
-    "express": "latest"
+    "express": "latest",
+    "jade": "latest",
+    "body-parser": "latest",
+    "datejs": "latest"
   }
 }

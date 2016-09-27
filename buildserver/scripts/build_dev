@@ -17,9 +17,5 @@ rm -rf "/home/ubuntu/Complexity/etc"
 echo "Cleaned working directory."
 
 # build
-<<<<<<< HEAD
 echo "Starting build."
-npm --prefix /home/ubuntu/Complexity install /home/ubuntu/Complexity
-=======
 npm cache -f clean && npm --prefix /home/ubuntu/Complexity install /home/ubuntu/Complexity
->>>>>>> 6b0601cdceaa80ad66a887f6879d15a3c1beee29

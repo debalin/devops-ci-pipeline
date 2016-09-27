@@ -1,0 +1,25 @@
+extends layout
+
+block content
+  h2= title
+  p #[a(href="https://github.com/wddlz/Complexity") Github repository for built project] 
+  br
+  h3 Build history
+  div 
+    table(cellpadding="10", border="1") 
+      thead
+        tr 
+          th Date
+          th Log File
+          th Build Status
+          th Branch
+      tbody
+        each build, i in data
+          tr 
+            td #{build.date}
+            td 
+              a(href='/' + build.link) #{build.link}
+            td #{build.status}
+            td #{build.branch}
+          
+  
