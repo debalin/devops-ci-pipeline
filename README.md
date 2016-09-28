@@ -1,9 +1,6 @@
 # DevOps Project Milestone M1
 This repository holds the first milestone build for the DevOps (CSC 591) course at NC State, Fall '16. The specification for this milestone can be found here: https://github.com/CSC-DevOps/Course/blob/master/Project/M1.md.
 
-### Workflow
-<img src="https://raw.githubusercontent.com/debalin/devops-milestone1/master/screens/workflow.png?" width="700"/>
-
 ### Build section
 - **Capabilities**: 
   - The ability to trigger a build in response to a git commit via a git hook.
@@ -21,7 +18,7 @@ This repository holds the first milestone build for the DevOps (CSC 591) course 
     
 ### Workflow diagram
 
-<img src="http://i.imgur.com/Ub4V1pI.png" width="700"/>
+<img src="https://github.com/debalin/devops-milestone1/blob/master/screens/workflow.png" width="700"/>
 
 ### Submission
 - Code
@@ -34,4 +31,4 @@ This repository holds the first milestone build for the DevOps (CSC 591) course 
 - README.md 
   - this file
 - Screencast
-  - [Screencast Link](https://raw.githubusercontent.com/debalin/devops-milestone1/master/screens/Screencast.mp4)
+  - [Screencast Link](https://github.com/debalin/devops-milestone1/blob/master/screens/Screencast.mp4)
