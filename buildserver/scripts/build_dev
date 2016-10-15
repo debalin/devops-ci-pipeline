@@ -7,17 +7,15 @@ echo "Running build script.\n"
 
 # checkout branch
 # http://stackoverflow.com/questions/1386291/git-git-dir-not-working-as-expected
-# git -C "/home/ubuntu/Complexity" checkout "dev"
-# git -C "/home/ubuntu/Complexity" pull
-git -C "/home/ubuntu/react-markdown" checkout "dev"
-git -C "/home/ubuntu/react-markdown" pull
+git -C "/home/ubuntu/Complexity" checkout "dev"
+git -C "/home/ubuntu/Complexity" pull
 echo "Pulled latest code.\n"
 
 # clean build
-rm -rf "/home/ubuntu/react-markdown/node_modules"
-rm -rf "/home/ubuntu/react-markdown/etc"
+rm -rf "/home/ubuntu/Complexity/node_modules"
+rm -rf "/home/ubuntu/Complexity/etc"
 echo "Cleaned working directory."
 
 # build
 echo "Starting build."
-npm cache -f clean && npm --prefix /home/ubuntu/react-markdown install --save /home/ubuntu/react-markdown
+npm cache -f clean && npm --prefix /home/ubuntu/Complexity install /home/ubuntu/Complexity
