@@ -1,20 +1,5 @@
 # DevOps Project Milestone M1
 This repository holds the first milestone build for the DevOps (CSC 591) course at NC State, Fall '16. The specification for this milestone can be found here: https://github.com/CSC-DevOps/Course/blob/master/Project/M1.md.
-
-### Submission
-- Code
-  - in buildserver folder
-- Team Member Unity IDs and Contributions
-  - ddas4 (Debalin Das)
-  - kkapoor (Kunal Kapoor)
-  - pmukher (Pratik Mukherjee)
-  - izdrosos (Ian Drosos)
-- README.md 
-  - this file
-- Screenshots
-  - showing capabilities
-- Screencast
-  - [Screencast Link]
   
 ### Build section
 - **Capabilities**: 
