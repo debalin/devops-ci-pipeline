@@ -1,6 +1,37 @@
-# DevOps Project Milestone M1
-This repository holds the first milestone build for the DevOps (CSC 591) course at NC State, Fall '16. The specification for this milestone can be found here: https://github.com/CSC-DevOps/Course/blob/master/Project/M1.md.
+# DevOps Project Milestone M2
+This repository holds the second milestone build for the DevOps (CSC 591) course at NC State, Fall '16. The specification for this milestone can be found here: https://github.com/CSC-DevOps/Course/blob/master/Project/M2.md.
 
+### TODO
+- [x] replace the test repository which we were building in our last milestone with an open source suite (JS projects would be better I guess). we can fork that and install our web hook on that. 
+- [x] once the build happens (from our last milestone), run the test suite that comes with the project and note the results.
+- [ ] then run an automatic test generation/fuzzing code (make it similar to what we just made for the homework, so let's find some open source project which has the same kind of conditional statements and fs calls) and create test files.
+- [ ] run the generated test file over the forked repository.
+- [ ] capture coverage.
+- [ ] run existing static analysis tool (lint, etc).
+- [ ] run separate code to capture some custom metrics (# of params, etc).
+- [ ] previously when people used to click on our build details link, they used to get only a build history. now along with that they will get coverage report, static analysis report and custom metrics report.  
+- [ ] remove a commit if the report isn't good enough using hooks 
+
+### Test section
+-  describing your testing setup
+### Analysis section
+- describing your base and extended analysis
+
+### Submission
+- Code
+  - in buildserver folder
+- Team Member Unity IDs and Contributions
+  - ddas4 (Debalin Das)
+  - kkapoor (Kunal Kapoor)
+  - pmukher (Pratik Mukherjee)
+  - izdrosos (Ian Drosos)
+- README.md 
+  - this file
+- Screenshots
+  - showing capabilities
+- Screencast
+  - [Screencast Link]
+  
 ### Build section
 - **Capabilities**: 
   - The ability to trigger a build in response to a git commit via a git hook.
@@ -19,16 +50,3 @@ This repository holds the first milestone build for the DevOps (CSC 591) course 
 ### Workflow diagram
 
 <img src="https://github.com/debalin/devops-milestone1/blob/master/screens/workflow.png" width="700"/>
-
-### Submission
-- Code
-  - in buildserver folder
-- Team Member Unity IDs and Contributions
-  - ddas4 (Debalin Das)
-  - kkapoor (Kunal Kapoor)
-  - pmukher (Pratik Mukherjee)
-  - izdrosos (Ian Drosos)
-- README.md 
-  - this file
-- Screencast
-  - [Screencast Link](https://github.com/debalin/devops-milestone1/blob/master/screens/Screencast.mp4)
