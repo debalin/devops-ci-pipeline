@@ -21,3 +21,4 @@ echo "Cleaned working directory."
 # build
 echo "Starting build."
 npm cache -f clean && npm --prefix /home/ubuntu/react-markdown install --save /home/ubuntu/react-markdown
+npm --prefix /home/ubuntu/react-markdown install --save json-loader
