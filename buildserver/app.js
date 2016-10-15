@@ -44,10 +44,17 @@ app.get('/', function(req, res) {
   });
 });
 
+// call tests
+function runTests(path, branch) {
+  // TODO
+  console.log("Running tests");
+}
+
 //called by GitHub WebHook
 app.post('/postreceive', function(req, res) {
   var branch = req.body.ref;
   var logFilePath = "logs/" + getCurrentTimeInISO() + ".log";
+  var testLogPath = "logs/tests.log";
 
   fs.writeFileSync(logFilePath, 'Build triggered from GitHub WebHook.\n');
   fs.appendFileSync(logFilePath, 'Branch updated: ' + branch + "\n");
@@ -81,6 +88,7 @@ app.post('/postreceive', function(req, res) {
       } else {
         fs.appendFileSync(logFilePath, 'release branch build successful.\n');
         sendEmail(logFilePath, "release", true);
+        runTests(testLogPath, "release");
         res.send('release branch build successful.');
       }
     });
