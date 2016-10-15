@@ -65,7 +65,7 @@ function runTests(testLogPath, branch) {
 app.post('/postreceive', function(req, res) {
   var branch = req.body.ref;
   var logFilePath = "logs/" + getCurrentTimeInISO() + ".log";
-  var testLogPath = "testLogs/tests.log";
+  var testLogPath = "logs/tests.log";
   fs.writeFileSync(logFilePath, 'Build triggered from GitHub WebHook.\n');
   fs.appendFileSync(logFilePath, 'Branch updated: ' + branch + "\n");
   fs.appendFileSync(serverLogFilePath, 'POST request for /postreceive.\n');
