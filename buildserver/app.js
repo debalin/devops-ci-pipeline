@@ -24,7 +24,7 @@ app.get('/', function(req, res) {
   var files = fs.readdirSync("logs/");
   var data = [];
   for (var file of files) {
-    if (file == 'server.log')
+    if (file == 'server.log' || file == 'tests.log')
       continue;
     var date = (new Date(file.split(".log")[0])).toString().split("GMT")[0];
     var link = file;
