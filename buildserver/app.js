@@ -55,10 +55,10 @@ function runTests(path, branch) {
     if (error !== null) {
         fs.appendFileSync(path, '\nexec error: \n' + error + "\n");
         fs.appendFileSync(path, branch + ' branch tests error.\n');
-      } else {
+    } else {
         fs.appendFileSync(path, branch + ' branch tests successful.\n');
-      }
-    });
+    }
+  });
 }
 
 //called by GitHub WebHook
