@@ -45,18 +45,18 @@ app.get('/', function(req, res) {
 });
 
 // call tests
-function runTests(path, branch) {
+function runTests(testLogPath, branch) {
   // TODO
   console.log("Running test script");
-  fs.writeFileSync(path, "Running tests for branch " + branch);
+  fs.writeFileSync(testLogPath, "Running tests for branch " + branch);
   child = exec("./scripts/run_tests.sh", function(error, stdout, stderr) {
-    fs.appendFileSync(path, '\nOutput in stdout:\n ' + stdout + "\n");
-    fs.appendFileSync(path, '\nOutput in stderr: \n' + stderr + "\n");
+    fs.appendFileSync(testLogPath, '\nOutput in stdout:\n ' + stdout + "\n");
+    fs.appendFileSync(testLogPath, '\nOutput in stderr: \n' + stderr + "\n");
     if (error !== null) {
-        fs.appendFileSync(path, '\nexec error: \n' + error + "\n");
-        fs.appendFileSync(path, branch + ' branch tests error.\n');
+        fs.appendFileSync(testLogPath, '\nexec error: \n' + error + "\n");
+        fs.appendFileSync(testLogPath, branch + ' branch tests error.\n');
     } else {
-        fs.appendFileSync(path, branch + ' branch tests successful.\n');
+        fs.appendFileSync(testLogPath, branch + ' branch tests successful.\n');
     }
   });
 }
