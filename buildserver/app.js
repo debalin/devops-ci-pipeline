@@ -84,9 +84,9 @@ app.post('/postreceive', function(req, res) {
         fs.appendFileSync(logFilePath, 'dev branch build successful.\n');
         sendEmail(logFilePath, "dev", true);
         runTests(testLogPath, "dev");
-        res.send('dev branch build successful.');
       }
     });
+    res.send('dev branch build successful.');
   } else if (branch === "refs/heads/release") {
     child = exec("./scripts/build_release", function(error, stdout, stderr) {
       fs.appendFileSync(logFilePath, '\nOutput in stdout: \n' + stdout + "\n");
@@ -100,9 +100,9 @@ app.post('/postreceive', function(req, res) {
         fs.appendFileSync(logFilePath, 'release branch build successful.\n');
         sendEmail(logFilePath, "release", true);
         runTests(testLogPath, "release");
-        res.send('release branch build successful.');
       }
     });
+    res.send('release branch build successful.');
   } else {
     fs.appendFileSync(logFilePath, "Not in acceptable branch, no build will occur.\n");
     res.send("Not in dev or release branch, no build will occur.");
