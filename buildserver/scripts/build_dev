@@ -7,15 +7,11 @@ echo "Running build script.\n"
 
 # checkout branch
 # http://stackoverflow.com/questions/1386291/git-git-dir-not-working-as-expected
-# git -C "/home/ubuntu/Complexity" checkout "dev"
-# git -C "/home/ubuntu/Complexity" pull
 git -C "/home/ubuntu/markdown-js" checkout "dev"
 git -C "/home/ubuntu/markdown-js" pull
 echo "Pulled latest code.\n"
 
 # clean build
-# rm -rf "/home/ubuntu/Complexity/node_modules"
-# rm -rf "/home/ubuntu/Complexity/etc"
 rm -rf "/home/ubuntu/markdown-js/node_modules"
 rm -rf "/home/ubuntu/markdown-js/etc"
 echo "Cleaned working directory."

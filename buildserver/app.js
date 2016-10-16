@@ -22,7 +22,12 @@ app.use(express.static(path.join(__dirname, 'logs')));
 //processing for root request. put log list here
 app.get('/', function(req, res) {
   fs.appendFileSync(serverLogFilePath, 'GET request for /. Will serve build history.\n');
-  var files = fs.readdirSync("logs/");
+  var dir = "logs/";
+  var files = fs.readdirSync(dir);
+  files.sort(function(a, b) {
+    return fs.statSync(dir + b).mtime.getTime() -
+      fs.statSync(dir + a).mtime.getTime();
+  });
   var data = [];
   for (var file of files) {
     if (file == 'server.log' || file == 'tests.log' || !file.includes("build"))
@@ -61,39 +66,39 @@ app.get('/', function(req, res) {
   });
 });
 
-// call tests
+//run tests
 function runTests(testLogPath, branch) {
-  console.log("Running test script");
-  fs.writeFileSync(testLogPath, "Running tests for branch " + branch);
+  fs.appendFileSync(serverLogFilePath, 'Running test script.\n');
+  fs.writeFileSync(testLogPath, "Running tests for branch " + branch + " .");
   try {
     child = execSync("./scripts/run_tests.sh");
     fs.appendFileSync(testLogPath, '\nOutput in stdout:\n ' + child + "\n");
     fs.appendFileSync(testLogPath, branch + ' branch tests successful.\n');
     return true;
-  }
-  catch (error) {
+  } catch (error) {
     fs.appendFileSync(testLogPath, '\nexec error: \n' + error + "\n");
     fs.appendFileSync(testLogPath, branch + ' branch tests error.\n');
     return false;
   }
 }
 
+//run fuzzing tests
 function runFuzzingTests(testLogPath, branch) {
-  console.log("Running fuzzing test script");
-  fs.writeFileSync(testLogPath, "Running fuzzing tests for branch " + branch);
+  fs.appendFileSync(serverLogFilePath, 'Running fuzzing test script.\n');
+  fs.writeFileSync(testLogPath, "Running fuzzing tests for branch " + branch + " .");
   try {
     child = execSync("./scripts/run_fuzzing_tests.sh");
     fs.appendFileSync(testLogPath, '\nOutput in stdout:\n ' + child + "\n");
     fs.appendFileSync(testLogPath, branch + ' branch fuzzing tests successful.\n');
     return true;
-  }
-  catch (error) {
+  } catch (error) {
     fs.appendFileSync(testLogPath, '\nexec error: \n' + error + "\n");
     fs.appendFileSync(testLogPath, branch + ' branch fuzzing tests error.\n');
     return false;
   }
 }
 
+//run static analysis
 function runStaticAnalysis(testLogPath, branch) {
   console.log("Running static analysis script");
   fs.writeFileSync(testLogPath, "Running static analysis for branch " + branch);
@@ -102,8 +107,7 @@ function runStaticAnalysis(testLogPath, branch) {
     fs.appendFileSync(testLogPath, '\nOutput in stdout:\n ' + child + "\n");
     fs.appendFileSync(testLogPath, branch + ' branch static analysis successful.\n');
     return true;
-  }
-  catch (error) {
+  } catch (error) {
     fs.appendFileSync(testLogPath, '\nexec error: \n' + error + "\n");
     fs.appendFileSync(testLogPath, branch + ' branch static analysis error.\n');
     return false;
@@ -114,109 +118,59 @@ function runStaticAnalysis(testLogPath, branch) {
 app.post('/postreceive', function(req, res) {
   var branch = req.body.ref;
   var logPrefix = "logs/" + getCurrentTimeInISO();
-  var logFilePath = logPrefix + "_build.log";
+  var buildLogPath = logPrefix + "_build.log";
   var testLogPath = logPrefix + "_test.log";
   var fuzzingTestLogPath = logPrefix + "_fuzzingTest.log";
   var staticTestLogPath = logPrefix + "_staticAnalysis.log";
 
-  fs.writeFileSync(logFilePath, 'Build triggered from GitHub WebHook.\n');
-  fs.appendFileSync(logFilePath, 'Branch updated: ' + branch + "\n");
+  fs.writeFileSync(buildLogPath, 'Build triggered from GitHub WebHook.\n');
+  fs.appendFileSync(buildLogPath, 'Branch updated: ' + branch + "\n");
   fs.appendFileSync(serverLogFilePath, 'POST request for /postreceive.\n');
 
   if (branch === "refs/heads/dev") {
-    fs.appendFileSync(logFilePath, 'Will build dev branch.\n');
+    fs.appendFileSync(buildLogPath, 'Will build dev branch.\n');
     try {
       child = execSync("./scripts/build_dev");
-      fs.appendFileSync(logFilePath, '\nOutput in stdout:\n ' + child + "\n");
-      fs.appendFileSync(logFilePath, 'dev branch build successful.\n');
-      if(runTests(testLogPath, "dev") &&
-                runFuzzingTests(fuzzingTestLogPath, "dev") &&
-                runStaticAnalysis(staticTestLogPath, "dev")) {
-          console.log("dev build or tests succeeded");
-          sendEmail(logFilePath, "dev", true);
-          res.send('dev branch build and test successful.');
+      fs.appendFileSync(buildLogPath, '\nOutput in stdout:\n ' + child + "\n");
+      fs.appendFileSync(buildLogPath, 'dev branch build successful.\n');
+      if (runTests(testLogPath, "dev") &&
+        runFuzzingTests(fuzzingTestLogPath, "dev") &&
+        runStaticAnalysis(staticTestLogPath, "dev")) {
+        fs.appendFileSync(serverLogFilePath, 'dev branch build and tests successful.\n');
+        sendEmail(buildLogPath, "dev", true);
+        res.send('dev branch build and test successful.');
       }
-    }
-    catch (error) {
-      console.log("dev build or tests failed");
-      fs.appendFileSync(logFilePath, '\nexec error: \n' + error + "\n");
-      fs.appendfilesync(logfilepath, 'dev branch build error.\n');
-      sendEmail(logFilePath, "dev", false);
+    } catch (error) {
+      fs.appendFileSync(serverLogFilePath, 'dev branch build or tests failed.\n');
+      fs.appendFileSync(buildLogPath, '\nexec error: \n' + error + "\n");
+      fs.appendfilesync(buildLogpath, 'dev branch build error.\n');
+      sendEmail(buildLogPath, "dev", false);
       res.send('dev branch build and test failed (check logs).');
     }
-  } 
-  else if (branch === "refs/heads/release") {
-    fs.appendFileSync(logFilePath, 'Will build release branch.\n');
+  } else if (branch === "refs/heads/release") {
+    fs.appendFileSync(buildLogPath, 'Will build release branch.\n');
     try {
       child = execSync("./scripts/build_release");
-      fs.appendFileSync(logFilePath, '\nOutput in stdout:\n ' + child + "\n");
-      fs.appendFileSync(logFilePath, 'release branch build successful.\n');
-      if(runTests(testLogPath, "release") &&
-                runFuzzingTests(fuzzingTestLogPath, "release") &&
-                runStaticAnalysis(staticTestLogPath, "release")) {
-          console.log("release build or tests succeeded");
-          sendEmail(logFilePath, "release", true);
-          res.send('release branch build and test successful.');
+      fs.appendFileSync(buildLogPath, '\nOutput in stdout:\n ' + child + "\n");
+      fs.appendFileSync(buildLogPath, 'release branch build successful.\n');
+      if (runTests(testLogPath, "release") &&
+        runFuzzingTests(fuzzingTestLogPath, "release") &&
+        runStaticAnalysis(staticTestLogPath, "release")) {
+        console.log("release build or tests succeeded");
+        sendEmail(buildLogPath, "release", true);
+        res.send('release branch build and test successful.');
       }
-    }
-    catch (error) {
+    } catch (error) {
       console.log("release build or tests failed");
-      fs.appendFileSync(logFilePath, '\nexec error: \n' + error + "\n");
-      fs.appendfilesync(logfilepath, 'release branch build error.\n');
-      sendEmail(logFilePath, "release", false);
+      fs.appendFileSync(buildLogPath, '\nexec error: \n' + error + "\n");
+      fs.appendfilesync(buildLogpath, 'release branch build error.\n');
+      sendEmail(buildLogPath, "release", false);
       res.send('release branch build and test failed (check logs).');
     }
-  } 
-  else {
-    fs.appendFileSync(logFilePath, "Not in acceptable branch, no build will occur.\n");
+  } else {
+    fs.appendFileSync(buildLogPath, "Not in acceptable branch, no build will occur.\n");
     res.send("Not in dev or release branch, no build will occur.");
   }
-});
-
-//called by post-commit hook for dev branch
-app.get('/dev', function(req, res) {
-  var logFilePath = "logs/" + getCurrentTimeInISO() + ".log";
-
-  fs.writeFileSync(logFilePath, 'Build triggered from post-commit for dev.\n');
-  fs.appendFileSync(serverLogFilePath, 'GET request for /dev.\n');
-
-  child = exec("./scripts/build_dev", function(error, stdout, stderr) {
-    fs.appendFileSync(logFilePath, '\nOutput in stdout: \n' + stdout + "\n");
-    fs.appendFileSync(logFilePath, '\nOutput in stderr: \n' + stderr + "\n");
-    if (error !== null) {
-      fs.appendFileSync(logFilePath, '\nexec error: \n' + error + "\n");
-      fs.appendFileSync(logFilePath, 'dev branch build error.\n');
-      sendEmail(logFilePath, "dev", false);
-      res.send('dev branch build error (check logs).');
-    } else {
-      fs.appendFileSync(logFilePath, 'dev branch build successful.\n');
-      sendEmail(logFilePath, "dev", true);
-      res.send('dev branch build successful.');
-    }
-  });
-});
-
-//called by post-commit hook for release branch
-app.get('/release', function(req, res) {
-  var logFilePath = "logs/" + getCurrentTimeInISO() + ".log";
-
-  fs.writeFileSync(logFilePath, 'Build triggered from post-commit for release.\n');
-  fs.appendFileSync(serverLogFilePath, 'GET request for /release.\n');
-
-  child = exec("./scripts/build_release", function(error, stdout, stderr) {
-    fs.appendFileSync(logFilePath, '\nOutput in stdout: \n' + stdout + "\n");
-    fs.appendFileSync(logFilePath, '\nOutput in stderr: \n' + stderr + "\n");
-    if (error !== null) {
-      fs.appendFileSync(logFilePath, '\nexec error: \n' + error + "\n");
-      fs.appendFileSync(logFilePath, 'release branch build error.\n');
-      sendEmail(logFilePath, "release", false);
-      res.send('release branch build error (check logs).');
-    } else {
-      fs.appendFileSync(logFilePath, 'release branch build successful.\n');
-      sendEmail(logFilePath, "release", true);
-      res.send('release branch build successful.');
-    }
-  });
 });
 
 //server will listen on port 3000
@@ -226,7 +180,7 @@ app.listen(3000, function() {
 
 //helper function to get current time in ISO format
 function getCurrentTimeInISO() {
-  return (new Date()).toISOString();    
+  return (new Date()).toISOString();
 }
 
 //helper function to send emails
