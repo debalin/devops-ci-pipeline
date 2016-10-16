@@ -55,8 +55,10 @@ function runTests(testLogPath, branch) {
     if (error !== null) {
         fs.appendFileSync(testLogPath, '\nexec error: \n' + error + "\n");
         fs.appendFileSync(testLogPath, branch + ' branch tests error.\n');
+        return false;
     } else {
         fs.appendFileSync(testLogPath, branch + ' branch tests successful.\n');
+        return true;
     }
   });
 }
@@ -70,8 +72,27 @@ function runFuzzingTests(testLogPath, branch) {
     if (error !== null) {
         fs.appendFileSync(testLogPath, '\nexec error: \n' + error + "\n");
         fs.appendFileSync(testLogPath, branch + ' branch fuzzing tests error.\n');
+        return false;
     } else {
         fs.appendFileSync(testLogPath, branch + ' branch fuzzing tests successful.\n');
+        return true;
+    }
+  });
+}
+
+function runStaticAnalysis(testLogPath, branch) {
+  console.log("Running static analysis jshint");
+  fs.writeFileSync(testLogPath, "Running static analysis jshint for branch " + branch);
+  child = exec("./scripts/run_static.sh", function(error, stdout, stderr) {
+    fs.appendFileSync(testLogPath, '\nOutput in stdout:\n ' + stdout + "\n");
+    fs.appendFileSync(testLogPath, '\nOutput in stderr: \n' + stderr + "\n");
+    if (error !== null) {
+        fs.appendFileSync(testLogPath, '\nexec error: \n' + error + "\n");
+        fs.appendFileSync(testLogPath, branch + ' branch static analysis error.\n');
+        return false;
+    } else {
+        fs.appendFileSync(testLogPath, branch + ' branch static analysis successful.\n');
+        return true;
     }
   });
 }
@@ -79,9 +100,11 @@ function runFuzzingTests(testLogPath, branch) {
 //called by GitHub WebHook
 app.post('/postreceive', function(req, res) {
   var branch = req.body.ref;
-  var logFilePath = "logs/" + getCurrentTimeInISO() + ".log";
-  var testLogPath = "logs/tests.log";
-  var fuzzingTestLogPath = "logs/fuzzingTests.log";
+  var logPrefix = "logs/" + getCurrentTimeInISO();
+  var logFilePath = logPrefix + ".log";
+  var testLogPath = logPrefix + "_test.log";
+  var fuzzingTestLogPath = logPrefix + "_fuzzingTest.log";
+  var staticTestLogPath = logPrefix + "_staticAnalysis.log";
 
   fs.writeFileSync(logFilePath, 'Build triggered from GitHub WebHook.\n');
   fs.appendFileSync(logFilePath, 'Branch updated: ' + branch + "\n");
@@ -99,9 +122,14 @@ app.post('/postreceive', function(req, res) {
         res.send('dev branch build error (check logs).');
       } else {
         fs.appendFileSync(logFilePath, 'dev branch build successful.\n');
-        sendEmail(logFilePath, "dev", true);
-        runTests(testLogPath, "dev");
-        runFuzzingTests(fuzzingTestLogPath, "dev");
+        if(runTests(testLogPath, "dev") &&
+                runFuzzingTests(fuzzingTestLogPath, "dev") &&
+                runStaticAnalysis(staticTestLogPath, "dev")) {
+          sendEmail(logFilePath, "dev", true);
+          res.send('release branch tests failed (check logs).');
+        }
+        else
+          sendEmail(logFilePath, "dev", false); 
       }
     });
     res.send('dev branch build successful.');
@@ -116,9 +144,14 @@ app.post('/postreceive', function(req, res) {
         res.send('release branch build error (check logs).');
       } else {
         fs.appendFileSync(logFilePath, 'release branch build successful.\n');
-        sendEmail(logFilePath, "release", true);
-        runTests(testLogPath, "release");
-        runFuzzingTests(fuzzingTestLogPath, "release");
+        if(runTests(testLogPath, "release") &&
+                runFuzzingTests(fuzzingTestLogPath, "release") &&
+                runStaticAnalysis(staticTestLogPath, "release")) {
+          sendEmail(logFilePath, "release", true);
+          res.send('release branch tests failed (check logs).');
+        }
+        else
+          sendEmail(logFilePath, "release", false); 
       }
     });
     res.send('release branch build successful.');
