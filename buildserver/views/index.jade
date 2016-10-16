@@ -12,20 +12,45 @@ block content
         thead
           tr
             th.text-center Date
-            th.text-center Log File
-            th.text-center Build Status
             th.text-center Branch
+            th.text-center Build Log
+            th.text-center Test Suite Log
+            th.text-center Fuzzing Test Log
+            th.text-center Static Analysis Log
+            th.text-center Commit Status
         tbody
-          each build, i in data
-            -if (!build.link.includes('style.css'))
-              tr 
-                td.text-center #{build.date}
-                td.text-center 
-                  a(href='/' + build.link) #{build.link}
-                -if (build.status=='failure')
-                  td.danger.text-center #{build.status}
-                -else
-                  td.success.text-center #{build.status}
-                td.text-center #{build.branch}
-          
+          each commit, i in data
+            tr 
+              td.text-center #{commit.date}
+              
+              td.text-center #{commit.branch}
+              
+              -if (commit.buildstatus=='failure')
+                td.danger.text-center a(href='/' + commit.buildlink) #{commit.buildlink}
+              -else
+                td.success.text-center a(href='/' + commit.buildlink) #{commit.buildlink}
+              
+              -if (commit.teststatus=='failure')
+                td.danger.text-center a(href='/' + commit.testlink) #{commit.testlink}
+              -else
+                td.success.text-center a(href='/' + commit.testlink) #{commit.testlink}
+
+              -if (commit.fuzzstatus=='failure')
+                td.danger.text-center a(href='/' + commit.fuzzlink) #{commit.fuzzlink}
+              -else
+                td.success.text-center a(href='/' + commit.fuzzlink) #{commit.fuzzlink}
+
+              -if (commit.staticstatus=='failure')
+                td.danger.text-center a(href='/' + commit.staticlink) #{commit.staticlink}
+              -else
+                td.success.text-center a(href='/' + commit.staticlink) #{commit.staticlink}
+
+              -if (commit.buildstatus=='failure' || 
+              commit.teststatus=='failure' || 
+              commit.fuzzstatus=='failure' ||
+              commit.staticstatus=='failure')
+                td.danger.text-center #{"Accepted"}
+              -else
+                td.success.text-center #{"Rejected"}
+              
   

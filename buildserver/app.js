@@ -27,16 +27,32 @@ app.get('/', function(req, res) {
   for (var file of files) {
     if (file == 'server.log' || file == 'tests.log' || !file.includes("build"))
       continue;
-    var date = (new Date(file.split("_build.log")[0])).toString().split("GMT")[0];
-    var link = file;
-    var temp = fs.readFileSync("logs/" + file, "utf8");
+    var prefix = file.split("_build.log")[0];
+    var date = (new Date(prefix)).toString().split("GMT")[0];
+    var buildlink = file;
+    var testlink = prefix + "_test.log";
+    var fuzzlink = prefix + "_fuzzingTest.log";
+    var staticlink = prefix + "_staticAnalysis.log";
+    var temp = fs.readFileSync("logs/" + buildlink, "utf8");
     var branch = temp.indexOf("dev branch") != -1 ? "dev" : "release";
-    var status = temp.indexOf("build successful") != -1 ? "successful" : "failure";
+    var buildstatus = temp.indexOf("build successful") != -1 ? "successful" : "failure";
+    var temp = fs.readFileSync("logs/" + testlink, "utf8");
+    var teststatus = temp.indexOf("tests successful") != -1 ? "successful" : "failure";
+    var temp = fs.readFileSync("logs/" + fuzzlink, "utf8");
+    var fuzzstatus = temp.indexOf("fuzzing tests successful") != -1 ? "successful" : "failure";
+    var temp = fs.readFileSync("logs/" + staticlink, "utf8");
+    var staticstatus = temp.indexOf("static analysis successful") != -1 ? "successful" : "failure";
     data.push({
       date: date,
-      link: link,
       branch: branch,
-      status: status
+      buildstatus: buildstatus,
+      teststatus: teststatus,
+      fuzzstatus: fuzzstatus,
+      staticstatus: staticstatus,
+      buildlink: buildlink,
+      testlink: testlink,
+      fuzzlink: fuzzlink,
+      staticlink: staticlink
     });
   }
   res.render('index', {
