@@ -61,11 +61,28 @@ function runTests(testLogPath, branch) {
   });
 }
 
+function runFuzzingTests(testLogPath, branch) {
+  console.log("Running automatically generated fuzzing tests");
+  fs.writeFileSync(testLogPath, "Running automatically generated fuzzing tests for branch " + branch);
+  child = exec("./scripts/run_fuzzing_tests.sh", function(error, stdout, stderr) {
+    fs.appendFileSync(testLogPath, '\nOutput in stdout:\n ' + stdout + "\n");
+    fs.appendFileSync(testLogPath, '\nOutput in stderr: \n' + stderr + "\n");
+    if (error !== null) {
+        fs.appendFileSync(testLogPath, '\nexec error: \n' + error + "\n");
+        fs.appendFileSync(testLogPath, branch + ' branch fuzzing tests error.\n');
+    } else {
+        fs.appendFileSync(testLogPath, branch + ' branch fuzzing tests successful.\n');
+    }
+  });
+}
+
 //called by GitHub WebHook
 app.post('/postreceive', function(req, res) {
   var branch = req.body.ref;
   var logFilePath = "logs/" + getCurrentTimeInISO() + ".log";
   var testLogPath = "logs/tests.log";
+  var fuzzingTestLogPath = "logs/fuzzingTests.log";
+
   fs.writeFileSync(logFilePath, 'Build triggered from GitHub WebHook.\n');
   fs.appendFileSync(logFilePath, 'Branch updated: ' + branch + "\n");
   fs.appendFileSync(serverLogFilePath, 'POST request for /postreceive.\n');
@@ -84,6 +101,7 @@ app.post('/postreceive', function(req, res) {
         fs.appendFileSync(logFilePath, 'dev branch build successful.\n');
         sendEmail(logFilePath, "dev", true);
         runTests(testLogPath, "dev");
+        runFuzzingTests(fuzzingTestLogPath, "dev");
       }
     });
     res.send('dev branch build successful.');
@@ -100,6 +118,7 @@ app.post('/postreceive', function(req, res) {
         fs.appendFileSync(logFilePath, 'release branch build successful.\n');
         sendEmail(logFilePath, "release", true);
         runTests(testLogPath, "release");
+        runFuzzingTests(fuzzingTestLogPath, "release");
       }
     });
     res.send('release branch build successful.');
