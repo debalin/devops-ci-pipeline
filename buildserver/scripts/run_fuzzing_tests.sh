@@ -5,4 +5,4 @@
 
 echo "Running fuzzing test script.\n"
 npm install /home/ubuntu/markdown-js
-node ../fuzzer.js
+node fuzzer.js
