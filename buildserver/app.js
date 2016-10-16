@@ -47,6 +47,7 @@ app.get('/', function(req, res) {
 // call tests
 function runTests(testLogPath, branch) {
   var flag = false;
+  var running = true;
   console.log("Running test script");
   fs.writeFileSync(testLogPath, "Running tests for branch " + branch);
   child = exec("./scripts/run_tests.sh", function(error, stdout, stderr) {
@@ -59,12 +60,16 @@ function runTests(testLogPath, branch) {
         fs.appendFileSync(testLogPath, branch + ' branch tests successful.\n');
         flag = true;
     }
+    running = false;
   });
+
+  while (running) {};
   return flag;
 }
 
 function runFuzzingTests(testLogPath, branch) {
   var flag = false;
+  var running = true;
   console.log("Running automatically generated fuzzing tests");
   fs.writeFileSync(testLogPath, "Running automatically generated fuzzing tests for branch " + branch);
   child = exec("./scripts/run_fuzzing_tests.sh", function(error, stdout, stderr) {
@@ -77,12 +82,16 @@ function runFuzzingTests(testLogPath, branch) {
         fs.appendFileSync(testLogPath, branch + ' branch fuzzing tests successful.\n');
         flag = true;
     }
+    running = false;
   });
+
+  while (running) {};
   return flag;
 }
 
 function runStaticAnalysis(testLogPath, branch) {
   var flag = false;
+  var running = true;
   console.log("Running static analysis jshint");
   fs.writeFileSync(testLogPath, "Running static analysis jshint for branch " + branch);
   child = exec("./scripts/run_static.sh", function(error, stdout, stderr) {
@@ -95,7 +104,10 @@ function runStaticAnalysis(testLogPath, branch) {
         fs.appendFileSync(testLogPath, branch + ' branch static analysis successful.\n');
         flag = true;
     }
+    running = false;
   });
+
+  while (running) {};
   return flag;
 }
 
@@ -113,6 +125,7 @@ app.post('/postreceive', function(req, res) {
   fs.appendFileSync(serverLogFilePath, 'POST request for /postreceive.\n');
 
   var flag = false;
+  var running = true;
   if (branch === "refs/heads/dev") {
     fs.appendFileSync(logFilePath, 'Will build dev branch.\n');
     child = exec("./scripts/build_dev", function(error, stdout, stderr) {
@@ -129,7 +142,11 @@ app.post('/postreceive', function(req, res) {
           flag = true;
         }
       }
+      running = false;
     });
+
+    while (running) {};
+
     if (flag) {
       console.log("dev build or tests succeeded");
       sendEmail(logFilePath, "dev", true);
@@ -155,7 +172,11 @@ app.post('/postreceive', function(req, res) {
           flag = true;
         }
       }
+      running = false;
     });
+
+    while (running) {};
+    
     if (flag) {
       console.log("release build or tests succeeded");
       sendEmail(logFilePath, "release", true);
