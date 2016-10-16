@@ -24,9 +24,9 @@ app.get('/', function(req, res) {
   var files = fs.readdirSync("logs/");
   var data = [];
   for (var file of files) {
-    if (file == 'server.log' || file == 'tests.log')
+    if (file == 'server.log' || file == 'tests.log' || !file.includes("build"))
       continue;
-    var date = (new Date(file.split(".log")[0])).toString().split("GMT")[0];
+    var date = (new Date(file.split("_build.log")[0])).toString().split("GMT")[0];
     var link = file;
     var temp = fs.readFileSync("logs/" + file, "utf8");
     var branch = temp.indexOf("dev branch") != -1 ? "dev" : "release";
@@ -46,7 +46,7 @@ app.get('/', function(req, res) {
 
 // call tests
 function runTests(testLogPath, branch) {
-  // TODO
+  var flag = false;
   console.log("Running test script");
   fs.writeFileSync(testLogPath, "Running tests for branch " + branch);
   child = exec("./scripts/run_tests.sh", function(error, stdout, stderr) {
@@ -55,15 +55,16 @@ function runTests(testLogPath, branch) {
     if (error !== null) {
         fs.appendFileSync(testLogPath, '\nexec error: \n' + error + "\n");
         fs.appendFileSync(testLogPath, branch + ' branch tests error.\n');
-        return false;
     } else {
         fs.appendFileSync(testLogPath, branch + ' branch tests successful.\n');
-        return true;
+        flag = true;
     }
   });
+  return flag;
 }
 
 function runFuzzingTests(testLogPath, branch) {
+  var flag = false;
   console.log("Running automatically generated fuzzing tests");
   fs.writeFileSync(testLogPath, "Running automatically generated fuzzing tests for branch " + branch);
   child = exec("./scripts/run_fuzzing_tests.sh", function(error, stdout, stderr) {
@@ -72,15 +73,16 @@ function runFuzzingTests(testLogPath, branch) {
     if (error !== null) {
         fs.appendFileSync(testLogPath, '\nexec error: \n' + error + "\n");
         fs.appendFileSync(testLogPath, branch + ' branch fuzzing tests error.\n');
-        return false;
     } else {
         fs.appendFileSync(testLogPath, branch + ' branch fuzzing tests successful.\n');
-        return true;
+        flag = true;
     }
   });
+  return flag;
 }
 
 function runStaticAnalysis(testLogPath, branch) {
+  var flag = false;
   console.log("Running static analysis jshint");
   fs.writeFileSync(testLogPath, "Running static analysis jshint for branch " + branch);
   child = exec("./scripts/run_static.sh", function(error, stdout, stderr) {
@@ -89,12 +91,12 @@ function runStaticAnalysis(testLogPath, branch) {
     if (error !== null) {
         fs.appendFileSync(testLogPath, '\nexec error: \n' + error + "\n");
         fs.appendFileSync(testLogPath, branch + ' branch static analysis error.\n');
-        return false;
     } else {
         fs.appendFileSync(testLogPath, branch + ' branch static analysis successful.\n');
-        return true;
+        flag = true;
     }
   });
+  return flag;
 }
 
 //called by GitHub WebHook
