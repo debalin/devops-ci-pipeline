@@ -112,6 +112,7 @@ app.post('/postreceive', function(req, res) {
   fs.appendFileSync(logFilePath, 'Branch updated: ' + branch + "\n");
   fs.appendFileSync(serverLogFilePath, 'POST request for /postreceive.\n');
 
+  var flag = false;
   if (branch === "refs/heads/dev") {
     fs.appendFileSync(logFilePath, 'Will build dev branch.\n');
     child = exec("./scripts/build_dev", function(error, stdout, stderr) {
@@ -119,22 +120,26 @@ app.post('/postreceive', function(req, res) {
       fs.appendFileSync(logFilePath, '\nOutput in stderr: \n' + stderr + "\n");
       if (error !== null) {
         fs.appendFileSync(logFilePath, '\nexec error: \n' + error + "\n");
-        fs.appendFileSync(logFilePath, 'dev branch build error.\n');
-        sendEmail(logFilePath, "dev", false);
-        res.send('dev branch build error (check logs).');
+        fs.appendfilesync(logfilepath, 'dev branch build error.\n');
       } else {
         fs.appendFileSync(logFilePath, 'dev branch build successful.\n');
         if(runTests(testLogPath, "dev") &&
                 runFuzzingTests(fuzzingTestLogPath, "dev") &&
                 runStaticAnalysis(staticTestLogPath, "dev")) {
-          sendEmail(logFilePath, "dev", true);
-          res.send('release branch tests failed (check logs).');
+          flag = true;
         }
-        else
-          sendEmail(logFilePath, "dev", false); 
       }
     });
-    res.send('dev branch build successful.');
+    if (flag) {
+      console.log("dev build or tests succeeded");
+      sendEmail(logFilePath, "dev", true);
+      res.send('dev branch build and test successful.');
+    }
+    else {
+      console.log("dev build or tests failed");
+      sendEmail(logFilePath, "dev", false);
+      res.send('dev branch build and test failed (check logs).');
+    }
   } else if (branch === "refs/heads/release") {
     child = exec("./scripts/build_release", function(error, stdout, stderr) {
       fs.appendFileSync(logFilePath, '\nOutput in stdout: \n' + stdout + "\n");
@@ -142,21 +147,25 @@ app.post('/postreceive', function(req, res) {
       if (error !== null) {
         fs.appendFileSync(logFilePath, '\nexec error: \n' + error + "\n");
         fs.appendFileSync(logFilePath, 'release branch build error.\n');
-        sendEmail(logFilePath, "release", false);
-        res.send('release branch build error (check logs).');
       } else {
         fs.appendFileSync(logFilePath, 'release branch build successful.\n');
         if(runTests(testLogPath, "release") &&
                 runFuzzingTests(fuzzingTestLogPath, "release") &&
                 runStaticAnalysis(staticTestLogPath, "release")) {
-          sendEmail(logFilePath, "release", true);
-          res.send('release branch tests failed (check logs).');
+          flag = true;
         }
-        else
-          sendEmail(logFilePath, "release", false); 
       }
     });
-    res.send('release branch build successful.');
+    if (flag) {
+      console.log("release build or tests succeeded");
+      sendEmail(logFilePath, "release", true);
+      res.send('release branch build and test successful.');
+    }
+    else {
+      console.log("release build or tests failed");
+      sendEmail(logFilePath, "release", false);
+      res.send('release branch build and test failed (check logs).');
+    }
   } else {
     fs.appendFileSync(logFilePath, "Not in acceptable branch, no build will occur.\n");
     res.send("Not in dev or release branch, no build will occur.");
