@@ -4,4 +4,4 @@
 # ian drosos
 
 echo "Running test script.\n"
-npm --prefix /home/ubuntu/react-markdown test
+npm --prefix /home/ubuntu/markdown-js test

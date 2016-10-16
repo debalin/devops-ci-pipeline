@@ -9,18 +9,18 @@ echo "Running build script.\n"
 # http://stackoverflow.com/questions/1386291/git-git-dir-not-working-as-expected
 # git -C "/home/ubuntu/Complexity" checkout "release"
 # git -C "/home/ubuntu/Complexity" pull
-git -C "/home/ubuntu/react-markdown" checkout "release"
-git -C "/home/ubuntu/react-markdown" pull
+git -C "/home/ubuntu/markdown-js" checkout "release"
+git -C "/home/ubuntu/markdown-js" pull
 echo "Pulled latest code.\n"
 
 # clean build
 # rm -rf "/home/ubuntu/Complexity/node_modules"
 # rm -rf "/home/ubuntu/Complexity/etc"
-rm -rf "/home/ubuntu/react-markdown/node_modules"
-rm -rf "/home/ubuntu/react-markdown/etc"
+rm -rf "/home/ubuntu/markdown-js/node_modules"
+rm -rf "/home/ubuntu/markdown-js/etc"
 echo "Cleaned working directory."
 
 # build
 echo "Starting build."
-npm cache -f clean && npm --prefix /home/ubuntu/react-markdown install --save /home/ubuntu/react-markdown
-npm --prefix /home/ubuntu/react-markdown install --save json-loader
+npm cache -f clean && npm --prefix /home/ubuntu/markdown-js install --save /home/ubuntu/markdown-js
+npm --prefix /home/ubuntu/markdown-js install --save json-loader
