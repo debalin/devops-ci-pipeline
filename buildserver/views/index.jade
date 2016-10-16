@@ -26,31 +26,36 @@ block content
               td.text-center #{commit.branch}
               
               -if (commit.buildstatus=='failure')
-                td.danger.text-center a(href='/' + commit.buildlink) #{commit.buildlink}
+                td.danger.text-center 
+                  a(href='/' + commit.buildlink) #{commit.buildlink}
               -else
-                td.success.text-center a(href='/' + commit.buildlink) #{commit.buildlink}
+                td.success.text-center 
+                  a(href='/' + commit.buildlink) #{commit.buildlink}
               
               -if (commit.teststatus=='failure')
-                td.danger.text-center a(href='/' + commit.testlink) #{commit.testlink}
+                td.danger.text-center 
+                  a(href='/' + commit.testlink) #{commit.testlink}
               -else
-                td.success.text-center a(href='/' + commit.testlink) #{commit.testlink}
+                td.success.text-center 
+                  a(href='/' + commit.testlink) #{commit.testlink}
 
               -if (commit.fuzzstatus=='failure')
-                td.danger.text-center a(href='/' + commit.fuzzlink) #{commit.fuzzlink}
+                td.danger.text-center 
+                  a(href='/' + commit.fuzzlink) #{commit.fuzzlink}
               -else
-                td.success.text-center a(href='/' + commit.fuzzlink) #{commit.fuzzlink}
+                td.success.text-center 
+                  a(href='/' + commit.fuzzlink) #{commit.fuzzlink}
 
               -if (commit.staticstatus=='failure')
-                td.danger.text-center a(href='/' + commit.staticlink) #{commit.staticlink}
+                td.danger.text-center 
+                  a(href='/' + commit.staticlink) #{commit.staticlink}
               -else
-                td.success.text-center a(href='/' + commit.staticlink) #{commit.staticlink}
+                td.success.text-center 
+                  a(href='/' + commit.staticlink) #{commit.staticlink}
 
-              -if (commit.buildstatus=='failure' || 
-              commit.teststatus=='failure' || 
-              commit.fuzzstatus=='failure' ||
-              commit.staticstatus=='failure')
-                td.danger.text-center #{"Accepted"}
+              -if (commit.buildstatus=='failure' || commit.teststatus=='failure' || commit.fuzzstatus=='failure' || commit.staticstatus=='failure')
+                td.danger.text-center #{"Rejected"}
               -else
-                td.success.text-center #{"Rejected"}
+                td.success.text-center #{"Accepted"}
               
   
