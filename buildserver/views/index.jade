@@ -15,6 +15,7 @@ block content
             th.text-center Branch
             th.text-center Build Log
             th.text-center Test Suite Log
+            th.text-center Statement Coverage
             th.text-center Fuzzing Test Log
             th.text-center Static Analysis Log
             th.text-center Commit Status
@@ -27,35 +28,35 @@ block content
               
               -if (commit.buildstatus=='failure')
                 td.danger.text-center 
-                  a(href='/' + commit.buildlink) #{commit.buildlink}
+                  a(href='/' + commit.buildLink) #{commit.buildLink}
               -else
                 td.success.text-center 
-                  a(href='/' + commit.buildlink) #{commit.buildlink}
+                  a(href='/' + commit.buildLink) #{commit.buildLink}
               
               -if (commit.teststatus=='failure')
                 td.danger.text-center 
-                  a(href='/' + commit.testlink) #{commit.testlink}
+                  a(href='/' + commit.testLink) #{commit.testLink}
               -else
                 td.success.text-center 
-                  a(href='/' + commit.testlink) #{commit.testlink}
+                  a(href='/' + commit.testLink) #{commit.testLink}
+
+              td.text-center #{commit.coverage}
 
               -if (commit.fuzzstatus=='failure')
                 td.danger.text-center 
-                  a(href='/' + commit.fuzzlink) #{commit.fuzzlink}
+                  a(href='/' + commit.fuzzLink) #{commit.fuzzLink}
               -else
                 td.success.text-center 
-                  a(href='/' + commit.fuzzlink) #{commit.fuzzlink}
+                  a(href='/' + commit.fuzzLink) #{commit.fuzzLink}
 
               -if (commit.staticstatus=='failure')
                 td.danger.text-center 
-                  a(href='/' + commit.staticlink) #{commit.staticlink}
+                  a(href='/' + commit.staticLink) #{commit.staticLink}
               -else
                 td.success.text-center 
-                  a(href='/' + commit.staticlink) #{commit.staticlink}
+                  a(href='/' + commit.staticLink) #{commit.staticLink}
 
               -if (commit.buildstatus=='failure' || commit.teststatus=='failure' || commit.fuzzstatus=='failure' || commit.staticstatus=='failure')
                 td.danger.text-center #{"Rejected"}
               -else
                 td.success.text-center #{"Accepted"}
-              
-  
