@@ -101,7 +101,7 @@ function runStaticAnalysis(testLogPath, branch) {
 app.post('/postreceive', function(req, res) {
   var branch = req.body.ref;
   var logPrefix = "logs/" + getCurrentTimeInISO();
-  var logFilePath = logPrefix + ".log";
+  var logFilePath = logPrefix + "_build.log";
   var testLogPath = logPrefix + "_test.log";
   var fuzzingTestLogPath = logPrefix + "_fuzzingTest.log";
   var staticTestLogPath = logPrefix + "_staticAnalysis.log";
