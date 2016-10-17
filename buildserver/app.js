@@ -175,10 +175,12 @@ function calculateCustomMetrics(testLogPath, branch) {
       fs.appendFileSync(testLogPath, "\nComment to Code ratio for file: " + file + "\n" + commentRatio);
     }
   }
-  if (passed)
+  if (passed) {
     fs.appendFileSync(testLogPath, "\n\nCustom metrics passed.");
-  else
+  } else {
     fs.appendFileSync(testLogPath, "\n\nCustom metrics failed.");
+  }
+  return passed;
 }
 
 //called by GitHub WebHook
