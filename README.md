@@ -8,8 +8,8 @@ This repository holds the second milestone build for the DevOps (CSC 591) course
 - [x] run the generated test file over the forked repository.
 - [x] capture coverage.
 - [x] run existing static analysis tool (lint, etc).
-- [ ] run separate code to capture some custom metrics (# of params, etc).
-- [ ] previously when people used to click on our build details link, they used to get only a build history. now along with that they will get coverage report, static analysis report and custom metrics report.  
+- [x] run separate code to capture some custom metrics (# of params, etc).
+- [x] previously when people used to click on our build details link, they used to get only a build history. now along with that they will get coverage report, static analysis report and custom metrics report.  
 - [ ] remove a commit if the report isn't good enough using hooks 
 
 ### Test section
