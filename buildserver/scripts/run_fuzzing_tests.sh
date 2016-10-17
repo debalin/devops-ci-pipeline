@@ -4,5 +4,5 @@
 # kunal kapoor
 
 echo "Running fuzzing test script.\n"
-npm install /home/ubuntu/markdown-js
+npm install /home/ubuntu/markdown-js > /dev/null 2>&1
 node fuzzer.js

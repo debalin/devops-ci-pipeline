@@ -121,8 +121,8 @@ function mutationTesting()
                 console.error( msg, trace[0].methodName, trace[0].lineNumber );
             }
         }
-        console.error( "passed {0}, failed {1}, reduced {2}".format(passedTests, failedTests.length, reducedTests.length) );
-        throw "Fuzzing test FAILED";
+        console.error( "passed {0}, failed {1}, reduced {2}.".format(passedTests, failedTests.length, reducedTests.length) );
+        throw "Fuzzing test FAILED.";
     }
 
     // RESULTS OF FUZZING
@@ -149,7 +149,8 @@ function mutationTesting()
         }
     }
 
-    console.log( "passed {0}, failed {1}, reduced {2}".format(passedTests, failedTests.length, reducedTests.length) );
+    console.log("Lesser than 10% cases have failed, attributing that the fuzz test was successful.");
+    console.log( "passed {0}, failed {1}, reduced {2}.".format(passedTests, failedTests.length, reducedTests.length) );
 
 }
 
