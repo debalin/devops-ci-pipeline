@@ -45,8 +45,8 @@ This repository holds the second milestone build for the DevOps (CSC 591) course
   - izdrosos (Ian Drosos)
 - README.md 
   - this file
-- Screenshots
-  - showing capabilities
+- Test cases/scripts/screenshots that demonstrate each capability.
+  - See sections above with links to tests/scripts/screens of each capability
 - Screencast
   - [Screencast Link]
   
