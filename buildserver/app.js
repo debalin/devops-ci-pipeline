@@ -183,6 +183,17 @@ function calculateCustomMetrics(testLogPath, branch) {
   return passed;
 }
 
+// reject build and revert
+function revertBuild(testLogPath, branch) {
+    fs.appendFileSync(testLogPath, 'FAILURE: REVERTING TO PREVIOUS COMMIT.\n');
+    try {
+    child = execSync("./scripts/reject_build.sh", { encoding: "utf8" });
+    fs.appendFileSync(testLogPath, '\nOutput in stdout:\n ' + child + "\n");
+  } catch (error) {
+    fs.appendFileSync(testLogPath, '\nexec error: \n' + error + "\n");
+    fs.appendFileSync(testLogPath, branch + ' branch revert error.\n');
+  }
+}
 //called by GitHub WebHook
 app.post('/postreceive', function(req, res) {
   var branch = req.body.ref;
@@ -225,6 +236,10 @@ app.post('/postreceive', function(req, res) {
 
     sendEmail("dev", logPrefix, buildResult, testResults);
 
+    // if (!buildResult || !testResults) {
+    //     revertBuild(buildLogpath, "dev");
+    // }
+
     res.send('dev branch build and test complete. Check logs for results.');
   } else if (branch === "refs/heads/release") {
     var buildResult;
@@ -253,6 +268,10 @@ app.post('/postreceive', function(req, res) {
     }
 
     sendEmail("release", logPrefix, buildResult, testResults);
+
+    // if (!buildResult || !testResults) {
+    //     revertBuild(buildLogpath, "release");
+    // }
 
     res.send('release branch build and test complete. Check logs for results.');
   } else {

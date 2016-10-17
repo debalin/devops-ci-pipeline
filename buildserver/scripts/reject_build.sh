@@ -4,5 +4,5 @@
 # ian drosos
 
 echo "Reverted project and pushing revert....\n"
-git revert --no-edit HEAD
-git push
+git -C "/home/ubuntu/markdown-js" revert --no-edit HEAD
+git -C "/home/ubuntu/markdown-js" push
