@@ -52,9 +52,9 @@ This repository holds the second milestone build for the DevOps (CSC 591) course
   
 ### Workflow diagram
  - Milestone 2
-  - <img src="https://github.com/debalin/devops-ci-pipeline/blob/milestone2/screens/DrawingM2Arch.png?raw=true" width="700"/>
+  - <img src="https://github.com/debalin/devops-ci-pipeline/blob/milestone2/screens/DrawingM2Arch.png" width="700"/>
  - Milestone 1
-  - <img src="https://github.com/debalin/devops-ci-pipeline/blob/milestone2/screens/workflow.png?raw=true" width="700"/>
+  - <img src="https://github.com/debalin/devops-ci-pipeline/blob/milestone2/screens/workflow.png" width="700"/>
 
 ### Build section
 - **Capabilities**: 
