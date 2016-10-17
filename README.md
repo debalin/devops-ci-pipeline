@@ -17,17 +17,17 @@ This repository holds the second milestone build for the DevOps (CSC 591) course
 
 ### Test section
 * **Test Suites**: The ability to run unit tests, measure coverage, and report the results.
-  * **Built in Tests**: [Test suite](https://github.com/wddlz/markdown-js/tree/master/test) included by markdown-js ran using [run_tests](https://github.com/debalin/devops-ci-pipeline/blob/milestone2/buildserver/scripts/run_tests.sh) script which includes coverage of the tests executed, results logged.
+  * **Built in Tests**: [Test suite](https://github.com/wddlz/markdown-js/tree/master/test) included by markdown-js ran using [run_tests](https://github.com/debalin/devops-ci-pipeline/blob/milestone2/buildserver/scripts/run_tests.sh) script which includes coverage of the tests executed, results logged. [Sample log](https://github.com/debalin/devops-ci-pipeline/blob/milestone2/screens/samples/SAMPLE_test.log.txt).
 
 * **Advanced Testing**: Implement one of the following advanced testing techniques: test priorization, test case generation, fuzzing, or flaky test quarantine.
-  * **Fuzzer**: [fuzzer.js](https://github.com/debalin/devops-ci-pipeline/blob/milestone2/buildserver/fuzzer.js) ran and results logged.
+  * **Fuzzer**: [fuzzer.js](https://github.com/debalin/devops-ci-pipeline/blob/milestone2/buildserver/fuzzer.js) ran and results logged. [Sample log](https://github.com/debalin/devops-ci-pipeline/blob/milestone2/screens/samples/SAMPLE_fuzzingTest.log.txt).
 
 ### Analysis section TODO
 * **Basic Analysis** The ability to run an existing static analysis tool on the source code (e.g. FindBugs, PMD, CheckStyle, NCover, Lint, etc.), process its results, and report its findings.
-  * **Static Analysis**: script [run_static](https://github.com/debalin/devops-ci-pipeline/blob/milestone2/buildserver/scripts/run_static.sh) is run to perform Lint on the markdown-js and results logged.
+  * **Static Analysis**: script [run_static](https://github.com/debalin/devops-ci-pipeline/blob/milestone2/buildserver/scripts/run_static.sh) is run to perform Lint on the markdown-js and results logged. [Sample log](https://github.com/debalin/devops-ci-pipeline/blob/milestone2/screens/samples/SAMPLE_staticAnalysis.log.txt).
 
 * **Custom Metrics**: The ability to implement your own custom source metrics.
-   * **Custom Analysis**: [analysis.js](https://github.com/debalin/devops-ci-pipeline/blob/milestone2/buildserver/analysis.js) ran and results logged.
+   * **Custom Analysis**: [analysis.js](https://github.com/debalin/devops-ci-pipeline/blob/milestone2/buildserver/analysis.js) ran and results logged. [Sample log](https://github.com/debalin/devops-ci-pipeline/blob/milestone2/screens/samples/SAMPLE_customMetrics.log.txt).
 
 ### Gate section
 - If tests in the test suite and advanced testing fuzzer or in the static/custom analysis fail, the server pulls from the previous (passing) commit and builds using the script [reject_build](https://github.com/debalin/devops-ci-pipeline/blob/milestone2/buildserver/scripts/reject_build.sh)
@@ -46,7 +46,7 @@ This repository holds the second milestone build for the DevOps (CSC 591) course
 - README.md 
   - this file
 - Test cases/scripts/screenshots that demonstrate each capability.
-  - See sections above with links to tests/scripts/screens of each capability
+  - See sections above with links to tests/scripts/screens of each capability.
 - Screencast
   - [Screencast Link]
   
