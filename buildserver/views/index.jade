@@ -4,7 +4,7 @@ block content
   div.container.col-lg-12
     h1= title
     br
-    p #[a.btn.btn-default.btn-info(href="https://github.com/wddlz/Complexity") Github repository for built project] 
+    p #[a.btn.btn-default.btn-info(href="https://github.com/wddlz/markdown-js") Github repository for built project] 
     br
     h3 Build history
     div.col-lg-10
@@ -28,33 +28,33 @@ block content
               
               -if (commit.buildstatus=='failure')
                 td.danger.text-center 
-                  a(href='/' + commit.buildLink) #{commit.buildLink}
+                  a(href='/' + commit.buildLink) build_log
               -else
                 td.success.text-center 
-                  a(href='/' + commit.buildLink) #{commit.buildLink}
+                  a(href='/' + commit.buildLink) build_log
               
               -if (commit.teststatus=='failure')
                 td.danger.text-center 
-                  a(href='/' + commit.testLink) #{commit.testLink}
+                  a(href='/' + commit.testLink) test_log
               -else
                 td.success.text-center 
-                  a(href='/' + commit.testLink) #{commit.testLink}
+                  a(href='/' + commit.testLink) test_log
 
               td.text-center #{commit.coverage}
 
               -if (commit.fuzzstatus=='failure')
                 td.danger.text-center 
-                  a(href='/' + commit.fuzzLink) #{commit.fuzzLink}
+                  a(href='/' + commit.fuzzLink) fuzzing_log
               -else
                 td.success.text-center 
-                  a(href='/' + commit.fuzzLink) #{commit.fuzzLink}
+                  a(href='/' + commit.fuzzLink) fuzzing_log
 
               -if (commit.staticstatus=='failure')
                 td.danger.text-center 
-                  a(href='/' + commit.staticLink) #{commit.staticLink}
+                  a(href='/' + commit.staticLink) static_analysis_log
               -else
                 td.success.text-center 
-                  a(href='/' + commit.staticLink) #{commit.staticLink}
+                  a(href='/' + commit.staticLink) static_analysis_log
 
               -if (commit.buildstatus=='failure' || commit.teststatus=='failure' || commit.fuzzstatus=='failure' || commit.staticstatus=='failure')
                 td.danger.text-center #{"Rejected"}

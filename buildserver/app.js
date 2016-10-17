@@ -49,7 +49,6 @@ app.get('/', function(req, res) {
     var temp = fs.readFileSync("logs/" + staticLink, "utf8");
     var staticstatus = temp.indexOf("static analysis successful") != -1 ? "successful" : "failure";
     var testResultFile = fs.readFileSync("logs/" + testLink, "utf8");
-     fs.appendFileSync(serverLogFilePath, testResultFile);
     if (testResultFile.indexOf("All files             |") > -1)
       var coverage = testResultFile.substring(testResultFile.indexOf("All files             |") + 24, testResultFile.indexOf("|", testResultFile.indexOf("All files             |") + 24)).trim();
     else
@@ -79,10 +78,16 @@ function runTests(testLogPath, branch) {
   fs.appendFileSync(serverLogFilePath, 'Running test script.\n');
   fs.writeFileSync(testLogPath, "Running tests for branch " + branch + " .");
   try {
-    child = execSync("./scripts/run_tests.sh");
+    child = execSync("./scripts/run_tests.sh", { encoding: "utf8" });
     fs.appendFileSync(testLogPath, '\nOutput in stdout:\n ' + child + "\n");
-    fs.appendFileSync(testLogPath, branch + ' branch tests successful.\n');
-    return true;
+    var coverage = child.substring(child.indexOf("All files             |") + 24, child.indexOf("|", child.indexOf("All files             |") + 24)).trim();
+    if (parseFloat(coverage) < 75) {
+      fs.appendFileSync(testLogPath, branch + ' branch tests did not pass coverage criteria.\n');
+      return false;
+    } else {
+      fs.appendFileSync(testLogPath, branch + ' branch tests successful.\n');
+      return true;
+    }
   } catch (error) {
     fs.appendFileSync(testLogPath, '\nexec error: \n' + error + "\n");
     fs.appendFileSync(testLogPath, branch + ' branch tests error.\n');
@@ -151,9 +156,9 @@ app.post('/postreceive', function(req, res) {
     }
 
     var testResults = true;
-    testResults = testResults && runTests(testLogPath, "dev");
-    testResults = testResults && runFuzzingTests(fuzzingTestLogPath, "dev");
-    testResults = testResults && runStaticAnalysis(staticTestLogPath, "dev");
+    testResults = runTests(testLogPath, "dev") && testResults;
+    testResults = runFuzzingTests(fuzzingTestLogPath, "dev") && testResults;
+    testResults = runStaticAnalysis(staticTestLogPath, "dev") && testResults;
     if (testResults) {
       fs.appendFileSync(serverLogFilePath, 'All dev branch tests successful.\n');
     } else {
