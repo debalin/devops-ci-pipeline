@@ -57,9 +57,8 @@ app.get('/', function(req, res) {
     if (fs.existsSync("logs/" + metricsLink)) {
       var temp = fs.readFileSync("logs/" + metricsLink, "utf8");
       var metricsStatus = temp.indexOf("Custom metrics passed") != -1 ? "successful" : "failure";
-    }
-    else {
-      var metricsStatus = "successful"; 
+    } else {
+      var metricsStatus = "successful";
     }
     var testResultFile = fs.readFileSync("logs/" + testLink, "utf8");
     if (testResultFile.indexOf("All files             |") > -1)
@@ -147,10 +146,10 @@ function runStaticAnalysis(testLogPath, branch) {
   }
 }
 
-//calculate custom metrics - max conditions greater than 7 will trigger failure - comment to code ratio 10% intended (http://everything2.com/title/comment-to-code+ratio)
+//calculate custom metrics - max conditions greater than 7 will trigger failure - comment to code ratio 5% intended (http://everything2.com/title/comment-to-code+ratio)
 function calculateCustomMetrics(testLogPath, branch) {
   fs.appendFileSync(serverLogFilePath, 'Calculating custom metrics.\n');
-  fs.writeFileSync(testLogPath, "Calculating custom metrics for branch " + branch + ". Passing criteria - MaxConditions < 7 && Comment-Code ratio >= 10%.");
+  fs.writeFileSync(testLogPath, "Calculating custom metrics for branch " + branch + ". Passing criteria - MaxConditions < 7 && Comment-Code ratio >= 5%.");
   var passed = true;
   var files = fs.readdirSync(srcDirectory);
   for (var file of files) {
@@ -171,7 +170,7 @@ function calculateCustomMetrics(testLogPath, branch) {
         commentLines += comment.loc.end.line - comment.loc.start.line + 1;
       }
       var commentRatio = (commentLines / numLines) * 100;
-      if (commentRatio < 10)
+      if (commentRatio < 5)
         passed = false;
       fs.appendFileSync(testLogPath, "\nComment to Code ratio for file: " + file + "\n" + commentRatio);
     }
@@ -226,27 +225,36 @@ app.post('/postreceive', function(req, res) {
 
     res.send('dev branch build and test complete. Check logs for results.');
   } else if (branch === "refs/heads/release") {
+    var buildResult;
     fs.appendFileSync(buildLogPath, 'Will build release branch.\n');
     try {
       child = execSync("./scripts/build_release.sh");
-      fs.appendFileSync(buildLogPath, '\nOutput in stdout:\n ' + child + "\n");
+      fs.appendFileSync(buildLogPath, '\nOutput in stdout:\n ' + child);
       fs.appendFileSync(buildLogPath, 'release branch build successful.\n');
-      if (runTests(testLogPath, "release") &&
-        runFuzzingTests(fuzzingTestLogPath, "release") &&
-        runStaticAnalysis(staticTestLogPath, "release")) {
-        console.log("release build or tests succeeded");
-        sendEmail(buildLogPath, "release", true);
-        res.send('release branch build and test successful.');
-      }
+      buildResult = true;
     } catch (error) {
-      console.log("release build or tests failed");
+      fs.appendFileSync(serverLogFilePath, 'release branch build failed.\n');
       fs.appendFileSync(buildLogPath, '\nexec error: \n' + error + "\n");
       fs.appendfilesync(buildLogpath, 'release branch build error.\n');
-      sendEmail(buildildLogPath, "release", false);
-      res.send('release branch build and test failed (check logs).');
+      buildResult = false;
     }
+
+    var testResults = true;
+    testResults = runTests(testLogPath, "release") && testResults;
+    testResults = runFuzzingTests(fuzzingTestLogPath, "release") && testResults;
+    testResults = runStaticAnalysis(staticTestLogPath, "release") && testResults;
+    testResults = calculateCustomMetrics(customMetricsLogPath, "release") && testResults;
+    if (testResults) {
+      fs.appendFileSync(serverLogFilePath, 'All release branch tests successful.\n');
+    } else {
+      fs.appendFileSync(serverLogFilePath, 'Some release branch test failed.\n');
+    }
+
+    sendEmail("release", logPrefix, buildResult, testResults);
+
+    res.send('release branch build and test complete. Check logs for results.');
   } else {
-    fs.appendFileSync(buildLogPath, "Not in acceptable branch, no build will occur.\n");
+    fs.appendFileSync(serverLogFilePath, "Not in acceptable branch, no build will occur.\n");
     res.send("Not in dev or release branch, no build will occur.");
   }
 });
