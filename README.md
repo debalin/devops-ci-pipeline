@@ -4,10 +4,10 @@ This repository holds the second milestone build for the DevOps (CSC 591) course
 ### TODO
 - [x] replace the test repository which we were building in our last milestone with an open source suite (JS projects would be better I guess). we can fork that and install our web hook on that. 
 - [x] once the build happens (from our last milestone), run the test suite that comes with the project and note the results.
-- [ ] then run an automatic test generation/fuzzing code (make it similar to what we just made for the homework, so let's find some open source project which has the same kind of conditional statements and fs calls) and create test files.
-- [ ] run the generated test file over the forked repository.
-- [ ] capture coverage.
-- [ ] run existing static analysis tool (lint, etc).
+- [x] then run an automatic test generation/fuzzing code (make it similar to what we just made for the homework, so let's find some open source project which has the same kind of conditional statements and fs calls) and create test files.
+- [x] run the generated test file over the forked repository.
+- [x] capture coverage.
+- [x] run existing static analysis tool (lint, etc).
 - [ ] run separate code to capture some custom metrics (# of params, etc).
 - [ ] previously when people used to click on our build details link, they used to get only a build history. now along with that they will get coverage report, static analysis report and custom metrics report.  
 - [ ] remove a commit if the report isn't good enough using hooks 
