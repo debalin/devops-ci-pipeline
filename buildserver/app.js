@@ -225,9 +225,14 @@ app.post('/postreceive', function(req, res) {
 
     var testResults = true;
     testResults = runTests(testLogPath, "dev") && testResults;
+    fs.appendFileSync(buildLogPath, 'testResults: ' + testResults);
     testResults = runFuzzingTests(fuzzingTestLogPath, "dev") && testResults;
+    fs.appendFileSync(buildLogPath, 'testResults: ' + testResults);
     testResults = runStaticAnalysis(staticTestLogPath, "dev") && testResults;
+    fs.appendFileSync(buildLogPath, 'testResults: ' + testResults);
     testResults = calculateCustomMetrics(customMetricsLogPath, "dev") && testResults;
+    fs.appendFileSync(buildLogPath, 'testResults: ' + testResults);
+
     if (testResults) {
       fs.appendFileSync(serverLogFilePath, 'All dev branch tests successful.\n');
     } else {
@@ -258,9 +263,13 @@ app.post('/postreceive', function(req, res) {
 
     var testResults = true;
     testResults = runTests(testLogPath, "release") && testResults;
+    fs.appendFileSync(buildLogPath, 'testResults: ' + testResults);
     testResults = runFuzzingTests(fuzzingTestLogPath, "release") && testResults;
+    fs.appendFileSync(buildLogPath, 'testResults: ' + testResults);
     testResults = runStaticAnalysis(staticTestLogPath, "release") && testResults;
+    fs.appendFileSync(buildLogPath, 'testResults: ' + testResults);
     testResults = calculateCustomMetrics(customMetricsLogPath, "release") && testResults;
+    fs.appendFileSync(buildLogPath, 'testResults: ' + testResults);
     if (testResults) {
       fs.appendFileSync(serverLogFilePath, 'All release branch tests successful.\n');
     } else {
