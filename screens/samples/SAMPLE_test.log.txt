@@ -1,0 +1,245 @@
+Running tests for branch dev .
+Output in stdout:
+ Running test script.
+
+
+> markdown@0.6.0-beta1 test /home/ubuntu/markdown-js
+> tap ./test/*.t.js "--cov"
+
+TAP version 13
+# Subtest: ./test/html_renderer.t.js
+    # Subtest: src attribute order
+        ok 1 - should be equivalent
+        1..1
+    ok 1 - src attribute order # time=19.814ms
+
+    1..1
+    # time=39.681ms
+ok 1 - ./test/html_renderer.t.js # time=2122.106ms
+
+# Subtest: ./test/interface.t.js
+    # Subtest: arguments untouched
+        ok 1 - tree isn't modified
+        ok 2 - output is consistent
+        1..2
+    ok 1 - arguments untouched # time=18.284ms
+
+    1..1
+    # time=38.223ms
+ok 2 - ./test/interface.t.js # time=2091.639ms
+
+# Subtest: ./test/regressions.t.js
+    # Subtest: split_block
+        ok 1 - split_block should record trailing newlines
+        ok 2 - split_block should ignore leading newlines
+        1..2
+    ok 1 - split_block # time=14.111ms
+
+    # Subtest: headers
+        ok 1 - Atx and Setext style H1s should produce the same output
+        ok 2 - Closing # optional on atxHeader
+        ok 3 - Atx h2 has right level
+        ok 4 - Atx and Setext style H2s should produce the same output
+        1..4
+    ok 2 - headers # time=6.573ms
+
+    # Subtest: code
+        ok 1 - Code block correct
+        ok 2 - next untouched when its not code
+        ok 3 - Code block correct for abutting para
+        ok 4 - paragraph put back into next block
+        ok 5 - adjacent code blocks 
+        ok 6 - adjacent code blocks preserve correct number of empty lines
+        1..6
+    ok 3 - code # time=6.626ms
+
+    # Subtest: bulletlist
+        ok 1 - single line bullets
+        ok 2 - link in bullet
+        ok 3 - multiline lazy bullets
+        ok 4 - multiline tidy bullets
+        ok 5 - only trim 4 spaces from the start of the line
+        ok 6 - loose bullet lists can have multiple paragraphs
+        ok 7 - Space required after bullet to trigger list
+        not ok 8 - space+continuation lines # TODO
+          ---
+          found:
+            - - bulletlist
+              - - listitem
+                - |-
+
+                  foo
+                  bar
+          wanted:
+            - - bulletlist
+              - - listitem
+                - |-
+                  foo
+                  bar
+          at:
+            line: 148
+            column: 5
+            file: test/regressions.t.js
+          source: |
+            t.equivalent(
+          ...
+        ok 9 - Interesting indented lists I
+        ok 10 - Interesting indented lists II
+        ok 11 - Interesting indented lists III
+        ok 12 - Different lists at same indent IV
+        ok 13 - Indenting Case V
+        ok 14 - deep nested lists VI
+        ok 15 - Indenting Case VII
+        ok 16 - Case VIII: Deep nesting and code block
+        1..16
+    ok 4 - bulletlist # time=36.872ms
+
+    # Subtest: horizRule
+        ok 1 - simple hr from '---'
+        ok 2 - simple hr from '_ __'
+        ok 3 - simple hr from '** ** **'
+        ok 4 - simple hr from '--- '
+        1..4
+    ok 5 - horizRule # time=4.311ms
+
+    # Subtest: blockquote
+        ok 1 - simple blockquote
+        ok 2 - blockquote with interesting content
+        ok 3 - blockquote with abutting paragraph
+        1..3
+    ok 6 - blockquote # time=5.477ms
+
+    # Subtest: referenceDefn
+        ok 1 - ref processed
+        ok 2 - reference extracted
+        ok 3 - ref processed
+        ok 4 - reference extracted
+        ok 5 - ref processed
+        ok 6 - reference extracted
+        ok 7 - ref processed
+        ok 8 - reference extracted
+        ok 9 - paragraph put back into blocks
+        ok 10 - no empty ref name
+        ok 11 - no brackets in ref name
+        1..11
+    ok 7 - referenceDefn # time=7.402ms
+
+    # Subtest: inline_br
+        ok 1 - linebreak+escape
+        1..1
+    ok 8 - inline_br # time=1.8ms
+
+    # Subtest: inline_escape
+        ok 1 - invalid escape
+        ok 2 - escapes >
+        ok 3 - escaped em
+        1..3
+    ok 9 - inline_escape # time=2.232ms
+
+    # Subtest: inline_code
+        ok 1 - code I
+        ok 2 - code II
+        ok 3 - code III
+        1..3
+    ok 10 - inline_code # time=2.865ms
+
+    # Subtest: inline_strong_em
+        ok 1 - strong/em I
+        ok 2 - strong/em II
+        ok 3 - strong/em III
+        ok 4 - strong/em IV
+        ok 5 - strong/em V
+        1..5
+    ok 11 - inline_strong_em # time=6.489ms
+
+    # Subtest: inline_img
+        ok 1 - inline img I
+        ok 2 - inline img II
+        ok 3 - inline img III
+        ok 4 - inline img IV
+        ok 5 - inline img IV
+        ok 6 - ref img I
+        ok 7 - ref img II
+        ok 8 - images with parentheses in the URL
+        1..8
+    ok 12 - inline_img # time=6.5ms
+
+    # Subtest: inline_link
+        ok 1 - inline link I
+        ok 2 - inline link II
+        ok 3 - inline link II
+        ok 4 - inline link II
+        ok 5 - inline link III
+        ok 6 - inline link IV
+        ok 7 - ref link I
+        ok 8 - ref link II
+        ok 9 - ref link II
+        ok 10 - no empty links
+        1..10
+    ok 13 - inline_link # time=6.797ms
+
+    # Subtest: inline_autolink
+        ok 1 - autolink I
+        ok 2 - autolink II
+        ok 3 - autolink III
+        1..3
+    ok 14 - inline_autolink # time=3.462ms
+
+    # Subtest: line_endings
+        ok 1 - Unix line endings
+        ok 2 - Windows line endings
+        ok 3 - Mac line endings
+        ok 4 - Mixed line endings
+        1..4
+    ok 15 - line_endings # time=6.863ms
+
+    # Subtest: header_in_paragraph
+        ok 1 - Header in praragraph
+        ok 2 - Header in praragraph
+        1..2
+    ok 16 - header_in_paragraph # time=3.058ms
+
+    1..16
+    # time=162.89ms
+ok 3 - ./test/regressions.t.js # time=2226.223ms
+
+# Subtest: ./test/render_tree.t.js
+    # Subtest: undefined attribute
+        ok 1 - should be equivalent
+        1..1
+    ok 1 - undefined attribute # time=8.396ms
+
+    # Subtest: escaped attribute
+        ok 1 - should be equivalent
+        1..1
+    ok 2 - escaped attribute # time=1.852ms
+
+    # Subtest: intermediate trees left alone
+        ok 1 - toHTMLTree should not mutate its argument
+        ok 2 - renderJsonML should not mutate its argument
+        1..2
+    ok 3 - intermediate trees left alone # time=3.484ms
+
+    1..3
+    # time=35.233ms
+ok 4 - ./test/render_tree.t.js # time=2089.683ms
+
+1..4
+# time=8547.671ms
+----------------------|----------|----------|----------|----------|----------------|
+File                  |  % Stmts | % Branch |  % Funcs |  % Lines |Uncovered Lines |
+----------------------|----------|----------|----------|----------|----------------|
+All files             |    70.12 |    62.58 |    78.31 |    69.78 |                |
+ src                  |     76.9 |    70.25 |    81.25 |    76.47 |                |
+  core.js             |    66.67 |    28.57 |      100 |    64.71 |... 41,42,44,45 |
+  markdown.js         |      100 |       50 |      100 |      100 |                |
+  markdown_helpers.js |    66.67 |       65 |    44.44 |    65.63 |... 69,70,71,73 |
+  parser.js           |    89.66 |    76.74 |    91.67 |    89.53 |... 150,151,152 |
+  render_tree.js      |    71.85 |    72.09 |      100 |    71.64 |... 248,250,286 |
+ src/dialects         |    66.67 |    58.42 |    76.47 |    66.35 |                |
+  dialect_helpers.js  |    95.24 |    66.67 |      100 |       95 |             18 |
+  gruber.js           |    88.08 |    74.32 |    94.29 |    88.33 |... 732,744,831 |
+  maruku.js           |    11.11 |     1.59 |     9.09 |    10.53 |... 279,280,283 |
+----------------------|----------|----------|----------|----------|----------------|
+
+dev branch tests successful.

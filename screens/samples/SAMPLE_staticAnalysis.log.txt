@@ -1,0 +1,14 @@
+Running static analysis for branch dev
+Output in stdout:
+ Running static analysis.
+
+
+> markdown@0.6.0-beta1 static /home/ubuntu/markdown-js
+> grunt static --force --no-color
+
+Running "jshint:files" (jshint) task
+>> 13 files lint free.
+
+Done.
+
+dev branch static analysis successful.

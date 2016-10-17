@@ -1,0 +1,92 @@
+Calculating custom metrics for branch dev. Passing criteria - MaxConditions < 7 && Comment-Code ratio >= 5%.
+
+Max Conditions for file: core.js
+anon function @3: 1
+anon function @32: 1
+
+Comment to Code ratio for file: core.js
+51.61290322580645
+
+Max Conditions for file: markdown.js
+anon function @3: 1
+anon function @32: 1
+anon function @5: 1
+
+Comment to Code ratio for file: markdown.js
+12.5
+
+Max Conditions for file: markdown_helpers.js
+anon function @3: 4
+anon function @32: 1
+anon function @5: 1
+mk_block_toSource: 1
+mk_block_inspect: 1
+anon function @31: 1
+anon function @51: 1
+forEach: 2
+isEmpty: 1
+extract_attr: 4
+
+Comment to Code ratio for file: markdown_helpers.js
+9.090909090909092
+
+Max Conditions for file: parser.js
+anon function @3: 6
+anon function @32: 1
+anon function @5: 1
+mk_block_toSource: 1
+mk_block_inspect: 1
+anon function @31: 1
+anon function @51: 1
+forEach: 2
+isEmpty: 1
+extract_attr: 4
+anon function @16: 1
+count_lines: 1
+splitBlocks: 1
+processBlock: 4
+processInline: 1
+toTree: 3
+anon function @146: 2
+anon function @155: 2
+anon function @168: 2
+anon function @179: 1
+anon function @196: 1
+
+Comment to Code ratio for file: parser.js
+28.640776699029125
+
+Max Conditions for file: render_tree.js
+anon function @3: 4
+anon function @32: 1
+anon function @5: 1
+mk_block_toSource: 1
+mk_block_inspect: 1
+anon function @31: 1
+anon function @51: 1
+forEach: 2
+isEmpty: 1
+extract_attr: 4
+anon function @16: 1
+count_lines: 1
+splitBlocks: 1
+processBlock: 4
+processInline: 1
+toTree: 3
+anon function @146: 2
+anon function @155: 2
+anon function @168: 2
+anon function @179: 1
+anon function @196: 1
+anon function @20: 3
+toHTMLTree: 2
+toHTML: 1
+escapeHTML: 2
+render_tree: 3
+convert_tree_to_html: 2
+merge_text_nodes: 2
+
+Comment to Code ratio for file: render_tree.js
+21.52317880794702
+
+Custom metrics passed.

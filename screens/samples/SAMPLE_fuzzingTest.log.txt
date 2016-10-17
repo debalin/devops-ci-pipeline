@@ -1,0 +1,8 @@
+Running fuzzing tests for branch dev .
+Output in stdout:
+ Running fuzzing test script.
+
+Lesser than 10% cases have failed, attributing that the fuzz test was successful.
+passed 1000, failed 0, reduced 0.
+
+dev branch fuzzing tests successful.
