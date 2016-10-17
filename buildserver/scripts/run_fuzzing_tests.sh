@@ -1,6 +1,6 @@
 #!/bin/sh
 # MAKE SURE TO CHMOD 0755 THESE SO SERVER CAN EXECUTE THEM
-# test script to run branch dev
+# fuzzing script to run on required branch
 # kunal kapoor
 
 echo "Running fuzzing test script.\n"

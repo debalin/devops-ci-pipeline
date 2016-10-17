@@ -4,6 +4,8 @@ var execSync = require('child_process').execSync;
 var bodyParser = require('body-parser');
 var fs = require('fs');
 var path = require('path');
+var analysis = require('./analysis.js');
+var extract = require('esprima-extract-comments');
 
 var app = express();
 var child;
@@ -18,6 +20,8 @@ app.use(bodyParser.urlencoded({
 }));
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, 'logs')));
+
+var srcDirectory = "/home/ubuntu/markdown-js/src/";
 
 //processing for root request. put log list here
 app.get('/', function(req, res) {
@@ -39,15 +43,24 @@ app.get('/', function(req, res) {
     var testLink = prefix + "_test.log";
     var fuzzLink = prefix + "_fuzzingTest.log";
     var staticLink = prefix + "_staticAnalysis.log";
+    var staticLink = prefix + "_staticAnalysis.log";
+    var metricsLink = prefix + "_customMetrics.log";
     var temp = fs.readFileSync("logs/" + buildLink, "utf8");
     var branch = temp.indexOf("dev branch") != -1 ? "dev" : "release";
-    var buildstatus = temp.indexOf("build successful") != -1 ? "successful" : "failure";
+    var buildStatus = temp.indexOf("build successful") != -1 ? "successful" : "failure";
     var temp = fs.readFileSync("logs/" + testLink, "utf8");
-    var teststatus = temp.indexOf("tests successful") != -1 ? "successful" : "failure";
+    var testStatus = temp.indexOf("tests successful") != -1 ? "successful" : "failure";
     var temp = fs.readFileSync("logs/" + fuzzLink, "utf8");
-    var fuzzstatus = temp.indexOf("fuzzing tests successful") != -1 ? "successful" : "failure";
+    var fuzzStatus = temp.indexOf("fuzzing tests successful") != -1 ? "successful" : "failure";
     var temp = fs.readFileSync("logs/" + staticLink, "utf8");
-    var staticstatus = temp.indexOf("static analysis successful") != -1 ? "successful" : "failure";
+    var staticStatus = temp.indexOf("static analysis successful") != -1 ? "successful" : "failure";
+    if (fs.existsSync("logs/" + metricsLink)) {
+      var temp = fs.readFileSync("logs/" + metricsLink, "utf8");
+      var metricsStatus = temp.indexOf("Custom metrics passed") != -1 ? "successful" : "failure";
+    }
+    else {
+      var metricsStatus = "successful"; 
+    }
     var testResultFile = fs.readFileSync("logs/" + testLink, "utf8");
     if (testResultFile.indexOf("All files             |") > -1)
       var coverage = testResultFile.substring(testResultFile.indexOf("All files             |") + 24, testResultFile.indexOf("|", testResultFile.indexOf("All files             |") + 24)).trim();
@@ -56,14 +69,16 @@ app.get('/', function(req, res) {
     data.push({
       date: date,
       branch: branch,
-      buildstatus: buildstatus,
-      teststatus: teststatus,
-      fuzzstatus: fuzzstatus,
-      staticstatus: staticstatus,
+      buildStatus: buildStatus,
+      testStatus: testStatus,
+      fuzzStatus: fuzzStatus,
+      staticStatus: staticStatus,
+      metricsStatus: metricsStatus,
       buildLink: buildLink,
       testLink: testLink,
       fuzzLink: fuzzLink,
       staticLink: staticLink,
+      metricsLink: metricsLink,
       coverage: coverage
     });
   }
@@ -73,7 +88,7 @@ app.get('/', function(req, res) {
   });
 });
 
-//run tests
+//run tests - coverage lesser than 70% will trigger failure
 function runTests(testLogPath, branch) {
   fs.appendFileSync(serverLogFilePath, 'Running test script.\n');
   fs.writeFileSync(testLogPath, "Running tests for branch " + branch + " .");
@@ -81,7 +96,7 @@ function runTests(testLogPath, branch) {
     child = execSync("./scripts/run_tests.sh", { encoding: "utf8" });
     fs.appendFileSync(testLogPath, '\nOutput in stdout:\n ' + child + "\n");
     var coverage = child.substring(child.indexOf("All files             |") + 24, child.indexOf("|", child.indexOf("All files             |") + 24)).trim();
-    if (parseFloat(coverage) < 75) {
+    if (parseFloat(coverage) < 70) {
       fs.appendFileSync(testLogPath, branch + ' branch tests did not pass coverage criteria.\n');
       return false;
     } else {
@@ -113,18 +128,58 @@ function runFuzzingTests(testLogPath, branch) {
 
 //run static analysis
 function runStaticAnalysis(testLogPath, branch) {
-  console.log("Running static analysis script");
+  fs.appendFileSync(serverLogFilePath, 'Running static analysis script.\n');
   fs.writeFileSync(testLogPath, "Running static analysis for branch " + branch);
   try {
-    child = execSync("./scripts/run_static.sh");
+    child = execSync("./scripts/run_static.sh", { encoding: "utf8" });
     fs.appendFileSync(testLogPath, '\nOutput in stdout:\n ' + child + "\n");
-    fs.appendFileSync(testLogPath, branch + ' branch static analysis successful.\n');
-    return true;
+    if (child.indexOf("failed") == -1) {
+      fs.appendFileSync(testLogPath, branch + ' branch static analysis successful.\n');
+      return true;
+    } else {
+      fs.appendFileSync(testLogPath, branch + ' branch static analysis error.\n');
+      return false;
+    }
   } catch (error) {
     fs.appendFileSync(testLogPath, '\nexec error: \n' + error + "\n");
     fs.appendFileSync(testLogPath, branch + ' branch static analysis error.\n');
     return false;
   }
+}
+
+//calculate custom metrics - max conditions greater than 7 will trigger failure - comment to code ratio 10% intended (http://everything2.com/title/comment-to-code+ratio)
+function calculateCustomMetrics(testLogPath, branch) {
+  fs.appendFileSync(serverLogFilePath, 'Calculating custom metrics.\n');
+  fs.writeFileSync(testLogPath, "Calculating custom metrics for branch " + branch + ". Passing criteria - MaxConditions < 7 && Comment-Code ratio >= 10%.");
+  var passed = true;
+  var files = fs.readdirSync(srcDirectory);
+  for (var file of files) {
+    if (!fs.lstatSync(srcDirectory + file).isDirectory()) {
+      var metrics = analysis.main(srcDirectory + file);
+      fs.appendFileSync(testLogPath, "\n\nMax Conditions for file: " + file + "\n");
+      for (var metric in metrics) {
+        if (metrics[metric].MaxConditions >= 7)
+          passed = false;
+        fs.appendFileSync(testLogPath, metrics[metric].FunctionName + ": " + metrics[metric].MaxConditions + "\n");
+      }
+
+      var content = fs.readFileSync(srcDirectory + file, "utf8");
+      var numLines = content.split("\n").length;
+      var comments = extract(content);
+      var commentLines = 0;
+      for (var comment of comments) {
+        commentLines += comment.loc.end.line - comment.loc.start.line + 1;
+      }
+      var commentRatio = (commentLines / numLines) * 100;
+      if (commentRatio < 10)
+        passed = false;
+      fs.appendFileSync(testLogPath, "\nComment to Code ratio for file: " + file + "\n" + commentRatio);
+    }
+  }
+  if (passed)
+    fs.appendFileSync(testLogPath, "\n\nCustom metrics passed.");
+  else
+    fs.appendFileSync(testLogPath, "\n\nCustom metrics failed.");
 }
 
 //called by GitHub WebHook
@@ -135,6 +190,7 @@ app.post('/postreceive', function(req, res) {
   var testLogPath = logPrefix + "_test.log";
   var fuzzingTestLogPath = logPrefix + "_fuzzingTest.log";
   var staticTestLogPath = logPrefix + "_staticAnalysis.log";
+  var customMetricsLogPath = logPrefix + "_customMetrics.log";
 
   fs.writeFileSync(buildLogPath, 'Build triggered from GitHub WebHook.\n');
   fs.appendFileSync(buildLogPath, 'Branch updated: ' + branch + "\n");
@@ -159,6 +215,7 @@ app.post('/postreceive', function(req, res) {
     testResults = runTests(testLogPath, "dev") && testResults;
     testResults = runFuzzingTests(fuzzingTestLogPath, "dev") && testResults;
     testResults = runStaticAnalysis(staticTestLogPath, "dev") && testResults;
+    testResults = calculateCustomMetrics(customMetricsLogPath, "dev") && testResults;
     if (testResults) {
       fs.appendFileSync(serverLogFilePath, 'All dev branch tests successful.\n');
     } else {

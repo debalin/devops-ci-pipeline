@@ -18,6 +18,7 @@ block content
             th.text-center Statement Coverage
             th.text-center Fuzzing Test Log
             th.text-center Static Analysis Log
+            th.text-center Custom Metrics
             th.text-center Commit Status
         tbody
           each commit, i in data
@@ -26,14 +27,14 @@ block content
               
               td.text-center #{commit.branch}
               
-              -if (commit.buildstatus=='failure')
+              -if (commit.buildStatus=='failure')
                 td.danger.text-center 
                   a(href='/' + commit.buildLink) build_log
               -else
                 td.success.text-center 
                   a(href='/' + commit.buildLink) build_log
               
-              -if (commit.teststatus=='failure')
+              -if (commit.testStatus=='failure')
                 td.danger.text-center 
                   a(href='/' + commit.testLink) test_log
               -else
@@ -42,21 +43,28 @@ block content
 
               td.text-center #{commit.coverage}
 
-              -if (commit.fuzzstatus=='failure')
+              -if (commit.fuzzStatus=='failure')
                 td.danger.text-center 
                   a(href='/' + commit.fuzzLink) fuzzing_log
               -else
                 td.success.text-center 
                   a(href='/' + commit.fuzzLink) fuzzing_log
 
-              -if (commit.staticstatus=='failure')
+              -if (commit.staticStatus=='failure')
                 td.danger.text-center 
                   a(href='/' + commit.staticLink) static_analysis_log
               -else
                 td.success.text-center 
                   a(href='/' + commit.staticLink) static_analysis_log
 
-              -if (commit.buildstatus=='failure' || commit.teststatus=='failure' || commit.fuzzstatus=='failure' || commit.staticstatus=='failure')
+              -if (commit.metricsStatus=='failure')
+                td.danger.text-center 
+                  a(href='/' + commit.metricsLink) metrics_log
+              -else
+                td.success.text-center 
+                  a(href='/' + commit.metricsLink) metrics_log
+
+              -if (commit.buildStatus=='failure' || commit.testStatus=='failure' || commit.fuzzStatus=='failure' || commit.staticStatus=='failure' || commit.metricsStatus=='failure')
                 td.danger.text-center #{"Rejected"}
               -else
                 td.success.text-center #{"Accepted"}
