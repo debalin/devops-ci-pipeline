@@ -8,9 +8,9 @@ while read line
 do
 echo "Sending mail to " $line
 if ($3 eq "true") then
-	subject='react-markdown '$2': build successful'
+	subject='markdown-js '$2': build successful'
 else
-	subject='react-markdown '$2': build failed'
+	subject='markdown-js '$2': build failed'
 fi
 if ($4 eq "true") then
 	subject=$subject' + tests passed'
