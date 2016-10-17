@@ -30,7 +30,7 @@ This repository holds the second milestone build for the DevOps (CSC 591) course
    * **Custom Analysis**: [analysis.js](https://github.com/debalin/devops-ci-pipeline/blob/milestone2/buildserver/analysis.js) ran and results logged.
 
 ### Gate section
-- If tests in the test suite and advanced testing fuzzer or in the static/custom analysis fail, the server pulls from the previous (passing) commit and builds.
+- If tests in the test suite and advanced testing fuzzer or in the static/custom analysis fail, the server pulls from the previous (passing) commit and builds using the script [reject_build](https://github.com/debalin/devops-ci-pipeline/blob/milestone2/buildserver/scripts/reject_build.sh)
 
 ### View
 * Results of the above processes are emailed to developers and are available on the [build server](http://54.191.99.255:3000/) for download.
