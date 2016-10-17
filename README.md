@@ -12,11 +12,28 @@ This repository holds the second milestone build for the DevOps (CSC 591) course
 - [x] previously when people used to click on our build details link, they used to get only a build history. now along with that they will get coverage report, static analysis report and custom metrics report.  
 - [ ] remove a commit if the report isn't good enough using hooks 
 
-### Test section
--  describing your testing setup
+### System under test
+* [markdown-js](https://github.com/wddlz/markdown-js), a fork of the open source project https://github.com/evilstreak/markdown-js that processes markdown with javascript.
 
-### Analysis section
-- describing your base and extended analysis
+### Test section
+* **Test Suites**: The ability to run unit tests, measure coverage, and report the results.
+  * **Built in Tests**: [Test suite](https://github.com/wddlz/markdown-js/tree/master/test) included by markdown-js ran using [run_tests](https://github.com/debalin/devops-ci-pipeline/blob/milestone2/buildserver/scripts/run_tests.sh) script which includes coverage of the tests executed, results logged.
+
+* **Advanced Testing**: Implement one of the following advanced testing techniques: test priorization, test case generation, fuzzing, or flaky test quarantine.
+  * **Fuzzer**: [fuzzer.js](https://github.com/debalin/devops-ci-pipeline/blob/milestone2/buildserver/fuzzer.js) ran and results logged.
+
+### Analysis section TODO
+* **Basic Analysis** The ability to run an existing static analysis tool on the source code (e.g. FindBugs, PMD, CheckStyle, NCover, Lint, etc.), process its results, and report its findings.
+  * **Static Analysis**: script [run_static](https://github.com/debalin/devops-ci-pipeline/blob/milestone2/buildserver/scripts/run_static.sh) is run to perform Lint on the markdown-js and results logged.
+
+* **Custom Metrics**: The ability to implement your own custom source metrics.
+   * **Custom Analysis**: [analysis.js](https://github.com/debalin/devops-ci-pipeline/blob/milestone2/buildserver/analysis.js) ran and results logged.
+
+### Gate section
+- If tests in the test suite and advanced testing fuzzer or in the static/custom analysis fail, the server pulls from the previous (passing) commit and builds.
+
+### View
+* Results of the above processes are emailed to developers and are available on the [build server](http://54.191.99.255:3000/) for download.
 
 ### Submission
 - Code
@@ -33,6 +50,12 @@ This repository holds the second milestone build for the DevOps (CSC 591) course
 - Screencast
   - [Screencast Link]
   
+### Workflow diagram
+ - Milestone 2
+  - <img src="https://github.com/debalin/devops-ci-pipeline/blob/milestone2/screens/DrawingM2.png?raw=true" width="700"/>
+ - Milestone 1
+  - <img src="https://github.com/debalin/devops-ci-pipeline/blob/milestone2/screens/workflow.png?raw=true" width="700"/>
+
 ### Build section
 - **Capabilities**: 
   - The ability to trigger a build in response to a git commit via a git hook.
@@ -47,7 +70,3 @@ This repository holds the second milestone build for the DevOps (CSC 591) course
     - The Github post-receive webhook sends the branch pushed to, based on the branch sent different build jobs are run from the build server [```app.js```](https://github.com/debalin/devops-milestone1/blob/master/buildserver/app.js) (as long as the branch is an acceptable branch to the build server).
   - The ability to track and display a history of past builds (a simple list works) via http.
     - We create one log file for each build, where we verbosely note down whatever happened in the build process. The build history can be seen [here](http://ec2-54-191-99-255.us-west-2.compute.amazonaws.com:3000/). This is basically a simple GET request to the root directory of the build server. We parse the log files present in the log directory on that request and present it as a list of logs, with date, branch and build status, using a `Jade` template. The log files are click-able. You can click on a log file link to view its contents.  
-    
-### Workflow diagram
-
-<img src="https://github.com/debalin/devops-milestone1/blob/master/screens/workflow.png" width="700"/>
