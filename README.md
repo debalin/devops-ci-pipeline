@@ -10,8 +10,7 @@ This repository holds the second milestone build for the DevOps (CSC 591) course
 - [x] run existing static analysis tool (lint, etc).
 - [x] run separate code to capture some custom metrics (# of params, etc).
 - [x] previously when people used to click on our build details link, they used to get only a build history. now along with that they will get coverage report, static analysis report and custom metrics report.  
-- [ ] remove a commit if the report isn't good enough using hooks 
-TEST SSH
+- [X] remove a commit if the report isn't good enough using hooks 
 
 ### System under test
 * [markdown-js](https://github.com/wddlz/markdown-js), a fork of the open source project https://github.com/evilstreak/markdown-js that processes markdown with javascript.
