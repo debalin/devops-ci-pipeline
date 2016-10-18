@@ -24,7 +24,7 @@ This repository holds the second milestone build for the DevOps (CSC 591) course
 
 ### Analysis section TODO
 * **Basic Analysis** The ability to run an existing static analysis tool on the source code (e.g. FindBugs, PMD, CheckStyle, NCover, Lint, etc.), process its results, and report its findings.
-  * **Static Analysis**: script [run_static](https://github.com/debalin/devops-ci-pipeline/blob/milestone2/buildserver/scripts/run_static.sh) is run (calls ```grunt static --force --no-color``` and ```grunt jshint```) to perform Lint on the markdown-js and results logged. [Sample log](https://github.com/debalin/devops-ci-pipeline/blob/milestone2/screens/samples/SAMPLE_staticAnalysis.log.txt).
+  * **Static Analysis**: script [run_static](https://github.com/debalin/devops-ci-pipeline/blob/milestone2/buildserver/scripts/run_static.sh) is run (calls ```grunt static --force --no-color``` and ```grunt jshint```) to perform jsHint to detect errors and other potential problems on the markdown-js project and logs results. [Sample log](https://github.com/debalin/devops-ci-pipeline/blob/milestone2/screens/samples/SAMPLE_staticAnalysis.log.txt).
 
 * **Custom Metrics**: The ability to implement your own custom source metrics.
    * **Custom Analysis**: [analysis.js](https://github.com/debalin/devops-ci-pipeline/blob/milestone2/buildserver/analysis.js) ran against the project files and results logged. [Sample log](https://github.com/debalin/devops-ci-pipeline/blob/milestone2/screens/samples/SAMPLE_customMetrics.log.txt).
