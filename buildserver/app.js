@@ -240,13 +240,13 @@ app.post('/postreceive', function(req, res) {
 
     sendEmail("dev", logPrefix, buildResult, testResults);
 
-    if (!buildResult || !testResults) {
-        var revertResults = revertBuild(buildLogpath, "dev");
-        if (!revertResults) {
-          // error with revert
-          fs.appendFileSync(serverLogFilePath, 'ERROR: Revert process failed.\n');
-        }
-    }
+    // if (!buildResult || !testResults) {
+    //     var revertResults = revertBuild(buildLogpath, "dev");
+    //     if (!revertResults) {
+    //       // error with revert
+    //       fs.appendFileSync(serverLogFilePath, 'ERROR: Revert process failed.\n');
+    //     }
+    // }
 
     res.send('dev branch build and test complete. Check logs for results.');
   } else if (branch === "refs/heads/release") {
@@ -277,13 +277,13 @@ app.post('/postreceive', function(req, res) {
 
     sendEmail("release", logPrefix, buildResult, testResults);
 
-    if (!buildResult || !testResults) {
-        var revertResults = revertBuild(buildLogpath, "release");
-        if (!revertResults) {
-          // error with revert
-          fs.appendFileSync(serverLogFilePath, 'ERROR: Revert process failed.\n');
-        }
-    }
+    // if (!buildResult || !testResults) {
+    //     var revertResults = revertBuild(buildLogpath, "release");
+    //     if (!revertResults) {
+    //       // error with revert
+    //       fs.appendFileSync(serverLogFilePath, 'ERROR: Revert process failed.\n');
+    //     }
+    // }
 
     res.send('release branch build and test complete. Check logs for results.');
   } else {
