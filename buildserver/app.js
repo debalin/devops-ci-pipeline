@@ -185,15 +185,18 @@ function calculateCustomMetrics(testLogPath, branch) {
 
 // reject build and revert
 function revertBuild(testLogPath, branch) {
-    fs.appendFileSync(testLogPath, 'FAILURE: REVERTING TO PREVIOUS COMMIT.\n');
-    try {
+  fs.appendFileSync(testLogPath, 'FAILURE: REVERTING TO PREVIOUS COMMIT.\n');
+  try {
     child = execSync("./scripts/reject_build.sh", { encoding: "utf8" });
     fs.appendFileSync(testLogPath, '\nOutput in stdout:\n ' + child + "\n");
+    return true;
   } catch (error) {
     fs.appendFileSync(testLogPath, '\nexec error: \n' + error + "\n");
-    fs.appendFileSync(testLogPath, branch + ' branch revert error.\n');
+    fs.appendFileSync(testLogPath, branch + ' branch revert error. Manually fix!\n');
+    return false;
   }
 }
+
 //called by GitHub WebHook
 app.post('/postreceive', function(req, res) {
   var branch = req.body.ref;
@@ -237,9 +240,13 @@ app.post('/postreceive', function(req, res) {
 
     sendEmail("dev", logPrefix, buildResult, testResults);
 
-    // if (!buildResult || !testResults) {
-    //     revertBuild(buildLogpath, "dev");
-    // }
+    if (!buildResult || !testResults) {
+        var revertResults = revertBuild(buildLogpath, "dev");
+        if (!revertResults) {
+          // error with revert
+          fs.appendFileSync(serverLogFilePath, 'ERROR: Revert process failed.\n');
+        }
+    }
 
     res.send('dev branch build and test complete. Check logs for results.');
   } else if (branch === "refs/heads/release") {
@@ -270,9 +277,13 @@ app.post('/postreceive', function(req, res) {
 
     sendEmail("release", logPrefix, buildResult, testResults);
 
-    // if (!buildResult || !testResults) {
-    //     revertBuild(buildLogpath, "release");
-    // }
+    if (!buildResult || !testResults) {
+        var revertResults = revertBuild(buildLogpath, "release");
+        if (!revertResults) {
+          // error with revert
+          fs.appendFileSync(serverLogFilePath, 'ERROR: Revert process failed.\n');
+        }
+    }
 
     res.send('release branch build and test complete. Check logs for results.');
   } else {
