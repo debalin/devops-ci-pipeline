@@ -31,7 +31,7 @@ TEST SSH
    * **Custom Analysis**: [analysis.js](https://github.com/debalin/devops-ci-pipeline/blob/milestone2/buildserver/analysis.js) ran against the project files and results logged. [Sample log](https://github.com/debalin/devops-ci-pipeline/blob/milestone2/screens/samples/SAMPLE_customMetrics.log.txt).
 
 ### Gate section
-- If tests in the test suite and advanced testing fuzzer or in the static/custom analysis fail, the server pulls from the previous (passing) commit and builds using the script [reject_build](https://github.com/debalin/devops-ci-pipeline/blob/milestone2/buildserver/scripts/reject_build.sh)
+- If tests in the test suite and advanced testing fuzzer or in the static/custom analysis fail, the server reverts the failing commit and pulls from the previous (passing) commit and pushses using the script [reject_build](https://github.com/debalin/devops-ci-pipeline/blob/milestone2/buildserver/scripts/reject_build.sh). This push triggers the webhook /postreceive on the server to rebuild the project with the passing commit. The Gate makes sure only commits that pass a minimum testing criteria remain on the repo and server. 
 
 ### View
 * Results of the above processes are emailed to developers and are available on the [build server](http://54.191.99.255:3000/) for download.
