@@ -222,7 +222,7 @@ app.post('/postreceive', function(req, res) {
     } catch (error) {
       fs.appendFileSync(serverLogFilePath, 'dev branch build failed.\n');
       fs.appendFileSync(buildLogPath, '\nexec error: \n' + error + "\n");
-      fs.appendfilesync(buildLogpath, 'dev branch build error.\n');
+      fs.appendfilesync(buildLogPath, 'dev branch build error.\n');
       buildResult = false;
     }
 
@@ -241,7 +241,7 @@ app.post('/postreceive', function(req, res) {
     sendEmail("dev", logPrefix, buildResult, testResults);
 
     if (!buildResult || !testResults) {
-        var revertResults = revertBuild(buildLogpath, "dev");
+        var revertResults = revertBuild(buildLogPath, "dev");
         if (!revertResults) {
           // error with revert
           fs.appendFileSync(serverLogFilePath, 'ERROR: Revert process failed.\n');
@@ -260,7 +260,7 @@ app.post('/postreceive', function(req, res) {
     } catch (error) {
       fs.appendFileSync(serverLogFilePath, 'release branch build failed.\n');
       fs.appendFileSync(buildLogPath, '\nexec error: \n' + error + "\n");
-      fs.appendfilesync(buildLogpath, 'release branch build error.\n');
+      fs.appendfilesync(buildLogPath, 'release branch build error.\n');
       buildResult = false;
     }
 
@@ -278,7 +278,7 @@ app.post('/postreceive', function(req, res) {
     sendEmail("release", logPrefix, buildResult, testResults);
 
     if (!buildResult || !testResults) {
-        var revertResults = revertBuild(buildLogpath, "release");
+        var revertResults = revertBuild(buildLogPath, "release");
         if (!revertResults) {
           // error with revert
           fs.appendFileSync(serverLogFilePath, 'ERROR: Revert process failed.\n');
