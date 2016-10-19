@@ -185,7 +185,8 @@ function calculateCustomMetrics(testLogPath, branch) {
 
 // reject build and revert
 function revertBuild(testLogPath, branch) {
-  fs.appendFileSync(testLogPath, 'FAILURE: REVERTING TO PREVIOUS COMMIT.\n');
+  fs.appendFileSync(serverLogFilePath, 'In revert build.\n');
+  fs.appendFileSync(testLogPath, 'Failure: Reverting to previous commit.\n');
   try {
     child = execSync("./scripts/reject_build.sh", { encoding: "utf8" });
     fs.appendFileSync(testLogPath, '\nOutput in stdout:\n ' + child + "\n");
@@ -241,11 +242,11 @@ app.post('/postreceive', function(req, res) {
     sendEmail("dev", logPrefix, buildResult, testResults);
 
     if (!buildResult || !testResults) {
-        var revertResults = revertBuild(buildLogPath, "dev");
-        if (!revertResults) {
-          // error with revert
-          fs.appendFileSync(serverLogFilePath, 'ERROR: Revert process failed.\n');
-        }
+      var revertResults = revertBuild(buildLogPath, "dev");
+      if (!revertResults) {
+        // error with revert
+        fs.appendFileSync(serverLogFilePath, 'ERROR: Revert process failed.\n');
+      }
     }
 
     res.send('dev branch build and test complete. Check logs for results.');
@@ -278,11 +279,11 @@ app.post('/postreceive', function(req, res) {
     sendEmail("release", logPrefix, buildResult, testResults);
 
     if (!buildResult || !testResults) {
-        var revertResults = revertBuild(buildLogPath, "release");
-        if (!revertResults) {
-          // error with revert
-          fs.appendFileSync(serverLogFilePath, 'ERROR: Revert process failed.\n');
-        }
+      var revertResults = revertBuild(buildLogPath, "release");
+      if (!revertResults) {
+        // error with revert
+        fs.appendFileSync(serverLogFilePath, 'ERROR: Revert process failed.\n');
+      }
     }
 
     res.send('release branch build and test complete. Check logs for results.');
