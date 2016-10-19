@@ -42,7 +42,7 @@ This repository holds the second milestone build for the DevOps (CSC 591) course
   - https://www.youtube.com/watch?v=JyOOjhT7lQQ
   
 ### Workflow diagram
- - Milestone 2
+ - Milestone 2<br/><br/>
   <img src="https://github.com/debalin/devops-ci-pipeline/blob/milestone2/screens/DrawingM2Arch.png" width="700"/>
   
 ### Previous milestone
