@@ -247,6 +247,12 @@ app.post('/postreceive', function(req, res) {
         // error with revert
         fs.appendFileSync(serverLogFilePath, 'ERROR: Revert process failed.\n');
       }
+    } else {
+        // Push to production
+        child = execSync("./scripts/push_prod.sh");
+        fs.appendFileSync(buildLogPath, '\nOutput in stdout:\n ' + child);
+        fs.appendFileSync(buildLogPath, 'dev branch pushed to production.\n');
+        buildResult = true;
     }
 
     res.send('dev branch build and test complete. Check logs for results.');
@@ -284,6 +290,12 @@ app.post('/postreceive', function(req, res) {
         // error with revert
         fs.appendFileSync(serverLogFilePath, 'ERROR: Revert process failed.\n');
       }
+    } else {
+        // Push to production
+        child = execSync("./scripts/push_prod.sh");
+        fs.appendFileSync(buildLogPath, '\nOutput in stdout:\n ' + child);
+        fs.appendFileSync(buildLogPath, 'dev branch pushed to production.\n');
+        buildResult = true;
     }
 
     res.send('release branch build and test complete. Check logs for results.');
