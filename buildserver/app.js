@@ -35,16 +35,16 @@ app.get('/', function(req, res) {
   });
   var data = [];
   for (var file of files) {
-    if (file == 'server.log' || file == 'tests.log' || file == 'email.log' || !file.includes("build"))
+    if (file == 'server.log' || file == 'tests.log' || file == 'email.log' || !file.includes("customMetrics"))
       continue;
-    var prefix = file.split("_build.log")[0];
+    var prefix = file.split("_customMetrics.log")[0];
     var date = (new Date(prefix)).toString().split("GMT")[0];
-    var buildLink = file;
+    var buildLink = prefix + "_build.log";
     var testLink = prefix + "_test.log";
     var fuzzLink = prefix + "_fuzzingTest.log";
     var staticLink = prefix + "_staticAnalysis.log";
     var staticLink = prefix + "_staticAnalysis.log";
-    var metricsLink = prefix + "_customMetrics.log";
+    var metricsLink = file;
     var temp = fs.readFileSync("logs/" + buildLink, "utf8");
     var branch = temp.indexOf("dev branch") != -1 ? "dev" : "release";
     var buildStatus = temp.indexOf("build successful") != -1 ? "successful" : "failure";
