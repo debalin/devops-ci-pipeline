@@ -249,7 +249,8 @@ app.post('/postreceive', function(req, res) {
       }
     } else {
         // Push to production
-        child = execSync("./scripts/push_prod.sh");
+        fs.appendFileSync(buildLogPath, '\nPushing to production\n');
+        child = execSync("./scripts/push_prod_dev.sh");
         fs.appendFileSync(buildLogPath, '\nOutput in stdout:\n ' + child);
         fs.appendFileSync(buildLogPath, 'dev branch pushed to production.\n');
         buildResult = true;
@@ -292,9 +293,10 @@ app.post('/postreceive', function(req, res) {
       }
     } else {
         // Push to production
-        child = execSync("./scripts/push_prod.sh");
+        fs.appendFileSync(buildLogPath, '\nPushing to production\n');
+        child = execSync("./scripts/push_prod_release.sh");
         fs.appendFileSync(buildLogPath, '\nOutput in stdout:\n ' + child);
-        fs.appendFileSync(buildLogPath, 'dev branch pushed to production.\n');
+        fs.appendFileSync(buildLogPath, 'release branch pushed to production.\n');
         buildResult = true;
     }
 
