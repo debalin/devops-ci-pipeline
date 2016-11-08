@@ -7,6 +7,7 @@ var args = process.argv.slice(2);
 var PORT = args[0];
 PORT = 3456;
 var canaryPercent = .33;
+var options = {};
 var proxy = httpProxy.createProxyServer(options);
 var proxy_server = http.createServer(function(req, res) {
     client.get("canaryFlag", function(err, reply) {
