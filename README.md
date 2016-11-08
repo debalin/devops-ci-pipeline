@@ -13,7 +13,7 @@ Your production infrastructure and deployment pipeline should support the follow
 
 - [ ] The ability to autoscale individual components of production and maintain and track in a central discovery service. Autoscale can be triggered by a predefined rule.
 
-- [ ] The ability to use feature flags, serviced by a global redis store, to toggle functionality of a deployed feature in production.
+- [x] The ability to use feature flags, serviced by a global redis store, to toggle functionality of a deployed feature in production.
 
 - [ ] The ability to perform a canary release: Using a proxy/load balancer server, route a percentage of traffic to a newly staged version of software and remaining traffic to a stable version of software. Stop routing traffic to canary if alert is raised.
 
