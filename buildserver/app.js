@@ -24,12 +24,12 @@ app.use(express.static(path.join(__dirname, 'logs')));
 var srcDirectory = "/home/ubuntu/markdown-js/src/";
 
 //processing for root request. put log list here
-app.get('/', function(req, res) {
+app.get('/', function (req, res) {
   fs.appendFileSync(serverLogFilePath, 'GET request for /. Will serve build history.\n');
   var dir = "logs/";
   var files = fs.readdirSync(dir);
   //http://stackoverflow.com/questions/10559685/using-node-js-how-do-you-get-a-list-of-files-in-chronological-order
-  files.sort(function(a, b) {
+  files.sort(function (a, b) {
     return fs.statSync(dir + b).mtime.getTime() -
       fs.statSync(dir + a).mtime.getTime();
   });
@@ -199,7 +199,7 @@ function revertBuild(testLogPath, branch) {
 }
 
 //called by GitHub WebHook
-app.post('/postreceive', function(req, res) {
+app.post('/postreceive', function (req, res) {
   var branch = req.body.ref;
   var logPrefix = "logs/" + getCurrentTimeInISO();
   var buildLogPath = logPrefix + "_build.log";
@@ -248,12 +248,12 @@ app.post('/postreceive', function(req, res) {
         fs.appendFileSync(serverLogFilePath, 'ERROR: Revert process failed.\n');
       }
     } else {
-        // Push to production
-        fs.appendFileSync(buildLogPath, '\nPushing to production\n');
-        child = execSync("./scripts/push_prod_dev.sh");
-        fs.appendFileSync(buildLogPath, '\nOutput in stdout:\n ' + child);
-        fs.appendFileSync(buildLogPath, 'dev branch pushed to production.\n');
-        buildResult = true;
+      // Push to production
+      fs.appendFileSync(buildLogPath, '\nPushing to production.\n');
+      child = execSync("./scripts/push_prod_dev.sh");
+      fs.appendFileSync(buildLogPath, '\nOutput in stdout:\n ' + child);
+      fs.appendFileSync(buildLogPath, 'dev branch pushed to production.\n');
+      buildResult = true;
     }
 
     res.send('dev branch build and test complete. Check logs for results.');
@@ -292,12 +292,12 @@ app.post('/postreceive', function(req, res) {
         fs.appendFileSync(serverLogFilePath, 'ERROR: Revert process failed.\n');
       }
     } else {
-        // Push to production
-        fs.appendFileSync(buildLogPath, '\nPushing to production\n');
-        child = execSync("./scripts/push_prod_release.sh");
-        fs.appendFileSync(buildLogPath, '\nOutput in stdout:\n ' + child);
-        fs.appendFileSync(buildLogPath, 'release branch pushed to production.\n');
-        buildResult = true;
+      // Push to production
+      fs.appendFileSync(buildLogPath, '\nPushing to production\n');
+      child = execSync("./scripts/push_prod_release.sh");
+      fs.appendFileSync(buildLogPath, '\nOutput in stdout:\n ' + child);
+      fs.appendFileSync(buildLogPath, 'release branch pushed to production.\n');
+      buildResult = true;
     }
 
     res.send('release branch build and test complete. Check logs for results.');
@@ -308,7 +308,7 @@ app.post('/postreceive', function(req, res) {
 });
 
 //server will listen on port 3000
-app.listen(3000, function() {
+app.listen(3000, function () {
   fs.appendFileSync(serverLogFilePath, 'Buildserver started at ' + getCurrentTimeInISO() + '. Listening on port 3000.\n');
 });
 
@@ -340,7 +340,7 @@ function sendEmail(branch, logPrefix, buildResult, testResults) {
   fs.writeFileSync(emailLogFile, emailContent);
 
   var execQuery = "./scripts/send_email.sh " + emailLogFile + " " + branch + " " + buildResult + " " + testResults;
-  var child = exec(execQuery, function(error, stdout, stderr) {
+  var child = exec(execQuery, function (error, stdout, stderr) {
     if (error !== null) {
       fs.appendFileSync(serverLogFilePath, "\n" + stderr);
       fs.appendFileSync(serverLogFilePath, "\nProblem sending email to admins.\n");
