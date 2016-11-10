@@ -5,13 +5,20 @@ This repository holds the third milestone build for the DevOps (CSC 591) course 
 
 Your production infrastructure and deployment pipeline should support the following properties.
 
-- [x] The ability to deploy software to the production environment triggered *after* build, testing, and analysis stage is completed. The deployment needs to occur on actual remote machine/VM (e.g. AWS, droplet, VCL), and not a local VM.
+- [ ] The ability to deploy software to the production environment triggered *after* build, testing, and analysis stage is completed. The deployment needs to occur on actual remote machine/VM (e.g. AWS, droplet, VCL), and not a local VM.
 
-- [x] The ability to configure a production environment *automatically*, including all infrastructure components, such web server, app service, load balancers, and redis stores. Configure should be accopmlished by using a configuration management tool, such as ansible, or docker. Alternatively, a cluster management approach could also work (e.g., kubernates).
+- [ ] The ability to configure a production environment *automatically*, including all infrastructure components, such web server, app service, load balancers, and redis stores. Configure should be accopmlished by using a configuration management tool, such as ansible, or docker. Alternatively, a cluster management approach could also work (e.g., kubernates).
 
-- [x] The ability to monitor the deployed application (using at least 2 metrics) and send alerts using email or SMS (e.g., smtp, mandrill, twilio). An alert can be sent based on some predefined rule.
+- [ ] The ability to monitor the deployed application (using at least 2 metrics) and send alerts using email or SMS (e.g., smtp, mandrill, twilio). An alert can be sent based on some predefined rule.
+For monitoring the usage of the application, a node js script called monitor.js was written which would monitor the webapp.js every 2 seconds through the setinterval function and would extract the memory and CPU utilization values by using the follwing two commands:- 
+    child1 = execSync("ps aux | grep webapp.js | grep -v grep | awk '{print $3}'", { encoding: "utf8" });
+    child2 = execSync("ps aux | grep webapp.js | grep -v grep | awk '{print $4}'", { encoding: "utf8" });
+These two values were concatenated separated by a ":". The concatenated value was assighed to a key and the value of the key was deployed on a redis server in a docker contaioner. The app.js was modified to monitor the redis server in the docker container. It would get the values of the key from the container after every 30 seconds. It would parse the value of the key and extract the values of the CPU and memory usage. After extraction it would compare the values with threshold utilization values. If the usage values is greater than the utilization values, it would trigger an email and send them to admins  
 
-- [x] The ability to autoscale individual components of production and maintain and track in a central discovery service. Autoscale can be triggered by a predefined rule.
+
+
+
+- [ ] The ability to autoscale individual components of production and maintain and track in a central discovery service. Autoscale can be triggered by a predefined rule.
 
 - [x] The ability to use feature flags, serviced by a global redis store, to toggle functionality of a deployed feature in production.
   - Feature flags are stored in a redis database that can be called by the deployed app to control access to features. For example, in [webapp.js](https://github.com/wddlz/markdown-js/blob/dev/webapp.js) a ```setMessageFlag``` is stored in the redis database and controls access to a function that allows you to set a message in the database. When ```setMesageFlag == 1``` a user can set a message to a string of their choosing, else a message is shown saying the feature is disabled. These flags can be toggeled in the redis database.
