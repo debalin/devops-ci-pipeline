@@ -9,27 +9,27 @@ PORT = 3456;
 var canaryPercent = .33;
 var options = {};
 var proxy = httpProxy.createProxyServer(options);
-var proxy_server = http.createServer(function(req, res) {
-    client.get("canaryFlag", function(err, reply) {
+var proxy_server = http.createServer(function (req, res) {
+    client.get("canaryFlag", function (err, reply) {
         if (reply == 1) {
-            console.log("CANARY ENABLED");       
+            console.log("CANARY ENABLED");
             if (Math.random() <= canaryPercent) {
                 console.log("lteq 33% USE canary");
-                client.rpoplpush("canary", "canary", function(err, value) {
-                    proxy.web(req, res, {target: value});
-                console.log("PROXY TO PORT " + value + " USED");
-            });
+                client.rpoplpush("canary", "canary", function (err, value) {
+                    proxy.web(req, res, { target: value });
+                    console.log("PROXY TO PORT " + value + " USED");
+                });
             } else {
                 console.log("gt 33% USE servers");
-                client.rpoplpush("servers", "servers", function(err, value) {
-                    proxy.web(req, res, {target: value});
-                console.log("PROXY TO PORT " + value + " USED");
-            });
-            }        
+                client.rpoplpush("servers", "servers", function (err, value) {
+                    proxy.web(req, res, { target: value });
+                    console.log("PROXY TO PORT " + value + " USED");
+                });
+            }
         } else {
             console.log("CANARY DISABLED: ALWAYS USE servers LIST");
-            client.rpoplpush("servers", "servers", function(err, value) {
-                proxy.web(req, res, {target: value});
+            client.rpoplpush("servers", "servers", function (err, value) {
+                proxy.web(req, res, { target: value });
                 console.log("PROXY TO PORT " + value + " USED");
             });
         }

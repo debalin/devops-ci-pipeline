@@ -2,7 +2,7 @@
 #kkapoor, ddas4
 
 echo "Pushing repository to production web server.\n"
-
+cp -r ../monitoring /home/ubuntu/markdown-js
 sudo docker stop app
 sudo docker rm app
 sudo docker rmi devops-milestone3

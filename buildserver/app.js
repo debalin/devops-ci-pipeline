@@ -6,7 +6,8 @@ var fs = require('fs');
 var path = require('path');
 var analysis = require('./analysis.js');
 var extract = require('esprima-extract-comments');
-
+var redis = require('redis'); 
+var client = redis.createClient(7000, '0.0.0.0', {}); 
 var app = express();
 var child;
 var serverLogFilePath = "logs/server.log";
@@ -22,6 +23,45 @@ app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, 'logs')));
 
 var srcDirectory = "/home/ubuntu/markdown-js/src/";
+var monitorMetrics; 
+	setInterval(function(){ 
+		client.get("usageKey", function(err, monitorMetrics){
+			if (monitorMetrics!=null){
+			var arr = monitorMetrics.split(":");
+			if(arr.length > 0){
+				fs.appendFileSync(serverLogFilePath, "\nMETRICS Recieved!.\n");
+				fs.appendFileSync(serverLogFilePath, monitorMetrics);
+				var emailContent = "";   
+				//arr[0] = arr[0].replace('\n', ''); 
+				//arr[1] = arr[1].replace('\n', '');
+				if (parseInt(arr[0]) > 1.0 && parseInt(arr[1]) > 1.0)
+					emailContent = "Both the CPU and Memory usages are above threshold limits"; 
+				else if(parseInt(arr[0])> 1.0 && parseInt(arr[1]) < 1.0)
+					emailContent = "CPU usage is above threshold"; 
+				else if(parseInt(arr[0])< 1.0 && parseInt(arr[1]) > 1.0)
+					emailContent = "Memory usage is above threshold limit"; 
+				if(emailContent!=""){
+					fs.appendFileSync(serverLogFilePath, "\nSending email about the monitoring metrics to the admins.\n");
+					var emailLogFile = "logs/email.log";
+					fs.writeFileSync(emailLogFile, emailContent);
+					var execQuery = "./scripts/send_email1.sh "+emailLogFile; 
+					var child = exec(execQuery, function (error, stdout, stderr) {
+    						if (error !== null) {
+     						 fs.appendFileSync(serverLogFilePath, "\n" + stderr);
+  	    						 fs.appendFileSync(serverLogFilePath, "\nProblem sending email to admins.\n");
+    						} else {
+      							 fs.appendFileSync(serverLogFilePath, "\n" + stdout);
+      							 fs.appendFileSync(serverLogFilePath, "\nEmail sent to admins.\n");
+   	 					}
+ 					 });
+				}	
+				else {
+					fs.appendFileSync(serverLogFilePath, "\nMETRICS Haven't been Recieved!.\n"); 
+				}
+				client.set("usageKey", "");
+			}
+		}}); 
+	}, 2000); 
 
 //processing for root request. put log list here
 app.get('/', function (req, res) {

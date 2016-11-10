@@ -1,0 +1,33 @@
+{
+  "name": "devops-ci-pipeline",
+  "version": "1.1.0",
+  "description": "DevOps CI Pipeline, Milestone 3. Unit testing, fuzzing, static analysis and all that jazz.",
+  "main": "app.js",
+  "author": "Ian Drosos, Kunal Kapoor, Pratik Mukherjee, Debalin Das",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/debalin/devops-ci-pipeline.git"
+  },
+  "dependencies": {
+    "body-parser": "latest",
+    "datejs": "latest",
+    "express": "latest",
+    "grunt": "^1.0.1",
+    "jade": "latest",
+    "fuzzer": "^0.2.0",
+    "istanbul": "^0.3.5",
+    "json5": "^0.4.0",
+    "marked": "^0.3.3",
+    "random-js": "^1.0.4",
+    "stack-trace": "0.0.9",
+    "stacktrace-parser": "^0.1.1",
+    "tap": "^0.5.0",
+    "underscore": "^1.7.0",
+    "esprima-extract-comments": "latest",
+    "http-proxy": "^1.9.0",
+    "request": "^2.54.0",
+    "multer": "^0.1.8",
+    "redis": "^0.12.1"
+  }
+}
