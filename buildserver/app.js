@@ -12,7 +12,7 @@ var app = express();
 var child;
 var serverLogFilePath = "logs/server.log";
 
-client.flushAll();
+client.flushall();
 
 //view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -25,9 +25,11 @@ app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, 'logs')));
 
 setInterval(function() {
-    child = execSync("curl 54.191.99.255:50100");
-    if (child.includes("Failed to connect")) {
-        fs.appendFileSync(serverLogFilePath, '\nFailed to connect to canary, stdout:\n ' + child);
+    try {
+        child = execSync("curl -s 54.191.99.255:50100 > /dev/null");
+    }
+    catch (ex) {
+        fs.appendFileSync(serverLogFilePath, '\nFailed to connect to canary.');
         client.set("canaryFlag", 0);
     }
 }, 2000);
@@ -35,10 +37,10 @@ setInterval(function() {
 var srcDirectory = "/home/ubuntu/markdown-js/src/";
 var monitorMetrics;
 setInterval(function() {
-    client.get("usageKey", function(err, monitorMetrics){
-        if (monitorMetrics!=null){
+    client.get("usageKey", function(err, monitorMetrics) {
+        if (monitorMetrics != null) {
             var arr = monitorMetrics.split(":");
-            if(arr.length > 0){
+            if (arr.length > 0) {
                 fs.appendFileSync(serverLogFilePath, "\nMETRICS Recieved!.\n");
                 fs.appendFileSync(serverLogFilePath, monitorMetrics);
                 var emailContent = "";
@@ -48,41 +50,41 @@ setInterval(function() {
                     var cpu = arr[0];
                     var mem = arr[1];
                     var child;
-                    if (parseInt(cpu) > 1.0 && parseInt(mem) > memUsage/10.0) {
+                    if (parseInt(cpu) > 1.0 && parseInt(mem) > memUsage / 10.0) {
                         emailContent = "Both the CPU and Memory usages are above threshold limits";
                         client.set("dockerMemory", memUsage * 2);
                         // Push to production
                         fs.appendFileSync(serverLogFilePath, '\nMemory usage high, increasing docker memory and pushing to production.\n');
-                        child = execSync("./scripts/push_prod_dev.sh " + (memUsage*2));
+                        child = execSync("./scripts/push_prod_dev.sh " + (memUsage * 2));
                         fs.appendFileSync(serverLogFilePath, '\nOutput in stdout:\n ' + child);
                         fs.appendFileSync(serverLogFilePath, 'dev branch pushed to production.\n');
                         fs.appendFileSync(serverLogFilePath, '\nPushing to production\n');
-                        child = execSync("./scripts/push_prod_release.sh " + (memUsage*2));
+                        child = execSync("./scripts/push_prod_release.sh " + (memUsage * 2));
                         fs.appendFileSync(serverLogFilePath, '\nOutput in stdout:\n ' + child);
                         fs.appendFileSync(serverLogFilePath, 'release branch pushed to production.\n');
                     }
-                    else if(parseInt(cpu)> 1.0) {
+                    else if (parseInt(cpu) > 1.0) {
                         emailContent = "CPU usage is above threshold";
                     }
-                    else if(parseInt(mem) > memUsage/10.0) {
+                    else if (parseInt(mem) > memUsage / 10.0) {
                         emailContent = "Memory usage is above threshold limit";
                         client.set("dockerMemory", memUsage * 2);
                         // Push to production
                         fs.appendFileSync(serverLogFilePath, '\nMemory usage high, increasing docker memory and pushing to production.\n');
-                        child = execSync("./scripts/push_prod_dev.sh " + (memUsage*2));
+                        child = execSync("./scripts/push_prod_dev.sh " + (memUsage * 2));
                         fs.appendFileSync(serverLogFilePath, '\nOutput in stdout:\n ' + child);
                         fs.appendFileSync(serverLogFilePath, 'dev branch pushed to production.\n');
                         fs.appendFileSync(serverLogFilePath, '\nPushing to production\n');
-                        child = execSync("./scripts/push_prod_release.sh " + (memUsage*2));
+                        child = execSync("./scripts/push_prod_release.sh " + (memUsage * 2));
                         fs.appendFileSync(serverLogFilePath, '\nOutput in stdout:\n ' + child);
                         fs.appendFileSync(serverLogFilePath, 'release branch pushed to production.\n');
                     }
-                    if(emailContent!=""){
+                    if (emailContent != "") {
                         fs.appendFileSync(serverLogFilePath, "\nSending email about the monitoring metrics to the admins.\n");
                         var emailLogFile = "logs/email.log";
                         fs.writeFileSync(emailLogFile, emailContent);
-                        var execQuery = "./scripts/send_email1.sh "+emailLogFile;
-                        var child = exec(execQuery, function (error, stdout, stderr) {
+                        var execQuery = "./scripts/send_email1.sh " + emailLogFile;
+                        var child = exec(execQuery, function(error, stdout, stderr) {
                             if (error !== null) {
                                 fs.appendFileSync(serverLogFilePath, "\n" + stderr);
                                 fs.appendFileSync(serverLogFilePath, "\nProblem sending email to admins.\n");
@@ -91,23 +93,24 @@ setInterval(function() {
                                 fs.appendFileSync(serverLogFilePath, "\nEmail sent to admins.\n");
                             }
                         });
-                    });
-                }
-                else {
-                    fs.appendFileSync(serverLogFilePath, "\nMETRICS Haven't been Recieved!.\n");
-                }
-                client.set("usageKey", "");
+                    }
+                });
             }
-        }});
+        }
+        else {
+            fs.appendFileSync(serverLogFilePath, "\nMETRICS Haven't been Recieved!.\n");
+        }
+        client.set("usageKey", "");
+    });
 }, 30000);
 
 //processing for root request. put log list here
-app.get('/', function (req, res) {
+app.get('/', function(req, res) {
     fs.appendFileSync(serverLogFilePath, 'GET request for /. Will serve build history.\n');
     var dir = "logs/";
     var files = fs.readdirSync(dir);
     //http://stackoverflow.com/questions/10559685/using-node-js-how-do-you-get-a-list-of-files-in-chronological-order
-    files.sort(function (a, b) {
+    files.sort(function(a, b) {
         return fs.statSync(dir + b).mtime.getTime() -
             fs.statSync(dir + a).mtime.getTime();
     });
@@ -277,7 +280,7 @@ function revertBuild(testLogPath, branch) {
 }
 
 //called by GitHub WebHook
-app.post('/postreceive', function (req, res) {
+app.post('/postreceive', function(req, res) {
     var branch = req.body.ref;
     var logPrefix = "logs/" + getCurrentTimeInISO();
     var buildLogPath = logPrefix + "_build.log";
@@ -392,7 +395,7 @@ app.post('/postreceive', function (req, res) {
 });
 
 //server will listen on port 3000
-app.listen(3000, function () {
+app.listen(3000, function() {
     fs.appendFileSync(serverLogFilePath, 'Buildserver started at ' + getCurrentTimeInISO() + '. Listening on port 3000.\n');
 });
 
@@ -424,7 +427,7 @@ function sendEmail(branch, logPrefix, buildResult, testResults) {
     fs.writeFileSync(emailLogFile, emailContent);
 
     var execQuery = "./scripts/send_email.sh " + emailLogFile + " " + branch + " " + buildResult + " " + testResults;
-    var child = exec(execQuery, function (error, stdout, stderr) {
+    var child = exec(execQuery, function(error, stdout, stderr) {
         if (error !== null) {
             fs.appendFileSync(serverLogFilePath, "\n" + stderr);
             fs.appendFileSync(serverLogFilePath, "\nProblem sending email to admins.\n");
