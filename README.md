@@ -14,8 +14,11 @@ Your production infrastructure and deployment pipeline should support the follow
 - [ ] The ability to autoscale individual components of production and maintain and track in a central discovery service. Autoscale can be triggered by a predefined rule.
 
 - [x] The ability to use feature flags, serviced by a global redis store, to toggle functionality of a deployed feature in production.
+  - Feature flags are stored in a redis database that can be called by the deployed app to control access to features. For example, in [webapp.js](https://github.com/wddlz/markdown-js/blob/dev/webapp.js) a ```setMessageFlag``` is stored in the redis database and controls access to a function that allows you to set a message in the database. When ```setMesageFlag == 1``` a user can set a message to a string of their choosing, else a message is shown saying the feature is disabled. These flags can be toggeled in the redis database.
+  - ![functionscreen](https://github.com/debalin/devops-ci-pipeline/raw/milestone3/screens/functionFlag.PNG)
 
 - [x] The ability to perform a canary release: Using a proxy/load balancer server, route a percentage of traffic to a newly staged version of software and remaining traffic to a stable version of software. Stop routing traffic to canary if alert is raised.
+  - [proxy.js](https://github.com/debalin/devops-ci-pipeline/blob/milestone3/buildserver/proxy.js) facilitates canary releasing. Whenever it is determined that a specific deployment should undergo a canary release it's url is added to the ```canary``` list. Whenever ```canaryFlag == 1```, enabling canary routing, the proxy server will route servers to both production servers, stored in the ```servers``` list, and the ```canary``` list servers. The proxy server routes 33% of traffic to the canary servers, and the rest are sent to the normal production list of servers. If the canary flag is disabled then all traffic is routed to the production servers.
 
 ### Evalution
 
@@ -32,6 +35,7 @@ Your production infrastructure and deployment pipeline should support the follow
 
 - Code
   - in buildserver folder (scripts in `scripts` sub-folder)
+  - in [markdown-js repo](https://github.com/wddlz/markdown-js/tree/dev) (feature flags usage, etc)
 - Team Member Unity IDs
   - ddas4 (Debalin Das)
   - kkapoor (Kunal Kapoor)
@@ -43,25 +47,10 @@ Your production infrastructure and deployment pipeline should support the follow
   - describing how your component meets each property.
 
 Due Thursday, Nov 10th @ midnight.
-
-### Submission
-- Code
-  - in buildserver folder (scripts in `scripts` sub-folder)
-- Team Member Unity IDs
-  - ddas4 (Debalin Das)
-  - kkapoor (Kunal Kapoor)
-  - pmukher (Pratik Mukherjee)
-  - izdrosos (Ian Drosos)
-- README.md 
-  - this file
-- Test cases/scripts/screenshots that demonstrate each capability.
-  - See sections above with links to tests/scripts/screens of each capability.
-- Screencast
-  - https://www.youtube.com/watch?v=JyOOjhT7lQQ
   
 ### Workflow diagram
  - Milestone 3<br/><br/>
-  TODO
-  
+ <img src="https://github.com/debalin/devops-ci-pipeline/raw/milestone3/screens/DrawingM3Arch.png" width="700"/>
+ 
 ### Previous milestone
 We have chosen to build on top of what we had in our first and second milestone. Details of the milestones, workflow diagrams, etc. can be found [here](https://github.com/debalin/devops-ci-pipeline/blob/master/README.md) and [here](https://github.com/debalin/devops-ci-pipeline/tree/milestone2).
