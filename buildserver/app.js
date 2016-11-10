@@ -55,11 +55,11 @@ setInterval(function() {
                         client.set("dockerMemory", memUsage * 2);
                         // Push to production
                         fs.appendFileSync(serverLogFilePath, '\nMemory usage high, increasing docker memory and pushing to production.\n');
-                        child = execSync("./scripts/push_prod_dev.sh " + (memUsage * 2));
+                        child = execSync("./scripts/push_prod_dev.sh " + (memUsage * 2) + "M");
                         fs.appendFileSync(serverLogFilePath, '\nOutput in stdout:\n ' + child);
                         fs.appendFileSync(serverLogFilePath, 'dev branch pushed to production.\n');
                         fs.appendFileSync(serverLogFilePath, '\nPushing to production\n');
-                        child = execSync("./scripts/push_prod_release.sh " + (memUsage * 2));
+                        child = execSync("./scripts/push_prod_release.sh " + (memUsage * 2) + "M");
                         fs.appendFileSync(serverLogFilePath, '\nOutput in stdout:\n ' + child);
                         fs.appendFileSync(serverLogFilePath, 'release branch pushed to production.\n');
                     }
@@ -71,11 +71,11 @@ setInterval(function() {
                         client.set("dockerMemory", memUsage * 2);
                         // Push to production
                         fs.appendFileSync(serverLogFilePath, '\nMemory usage high, increasing docker memory and pushing to production.\n');
-                        child = execSync("./scripts/push_prod_dev.sh " + (memUsage * 2));
+                        child = execSync("./scripts/push_prod_dev.sh " + (memUsage * 2) + "M");
                         fs.appendFileSync(serverLogFilePath, '\nOutput in stdout:\n ' + child);
                         fs.appendFileSync(serverLogFilePath, 'dev branch pushed to production.\n');
                         fs.appendFileSync(serverLogFilePath, '\nPushing to production\n');
-                        child = execSync("./scripts/push_prod_release.sh " + (memUsage * 2));
+                        child = execSync("./scripts/push_prod_release.sh " + (memUsage * 2) + "M");
                         fs.appendFileSync(serverLogFilePath, '\nOutput in stdout:\n ' + child);
                         fs.appendFileSync(serverLogFilePath, 'release branch pushed to production.\n');
                     }
@@ -266,6 +266,7 @@ function calculateCustomMetrics(testLogPath, branch) {
 
 // reject build and revert
 function revertBuild(testLogPath, branch) {
+    return true;
     fs.appendFileSync(serverLogFilePath, 'In revert build.\n');
     fs.appendFileSync(testLogPath, 'Failure: Reverting to previous commit.\n');
     try {
@@ -333,7 +334,7 @@ app.post('/postreceive', function(req, res) {
             client.get("dockerMemory", function(err, reply) {
                 if (err) throw err;
                 fs.appendFileSync(buildLogPath, '\nPushing to production.\n');
-                child = execSync("./scripts/push_prod_dev.sh " + reply);
+                child = execSync("./scripts/push_prod_dev.sh " + reply + "M");
                 fs.appendFileSync(buildLogPath, '\nOutput in stdout:\n ' + child);
                 fs.appendFileSync(buildLogPath, 'dev branch pushed to production.\n');
             });
@@ -380,7 +381,7 @@ app.post('/postreceive', function(req, res) {
             client.get("dockerMemory", function(err, reply) {
                 if (err) throw err;
                 fs.appendFileSync(buildLogPath, '\nPushing to production\n');
-                child = execSync("./scripts/push_prod_release.sh " + reply);
+                child = execSync("./scripts/push_prod_release.sh " + reply + "M");
                 fs.appendFileSync(buildLogPath, '\nOutput in stdout:\n ' + child);
                 fs.appendFileSync(buildLogPath, 'release branch pushed to production.\n');
             });
@@ -480,9 +481,9 @@ app.get("/featureFlag", function(req, res) {
     });
 });
 
-client.set("dockerMemory", 256);
+client.set("dockerMemory", "64");
 client.set("canaryFlag", 1);
 client.set("setMessageFlag", 1);
 client.set("featureFlag", 1);
-client.lpush("canaryServers", "54.191.99.255:50100");
-client.lpush("prodServers", "54.191.99.255:50000");
+client.lpush("canaryServers", "http://54.191.99.255:50100");
+client.lpush("prodServers", "http://54.191.99.255:50000");
