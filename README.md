@@ -49,9 +49,7 @@ These two values were concatenated separated by a ":". The concatenated value wa
 - README.md 
   - this file
 - Screencast
-  - describing how your component meets each property.
-
-Due Thursday, Nov 10th @ midnight.
+  - https://www.youtube.com/watch?v=td8HlOzYdtY
   
 ### Workflow diagram
  - Milestone 3<br/><br/>
