@@ -17,7 +17,7 @@ Your production infrastructure and deployment pipeline should support the follow
   - Our production environment is maintained in Docker containers. So their configuration is maintained through Dockerfiles. You can see our main Dockerfile [here](https://github.com/wddlz/markdown-js/blob/dev/Dockerfile). It sets up the environment by taking `node:argon` as the base image and then doing npm install for **both** our application and the monitoring `Node` file. Both of them are run through a shell script which acts as an entrypoint in the Dockerfile. 
 
 - [x] The ability to monitor the deployed application (using at least 2 metrics) and send alerts using email or SMS (e.g., smtp, mandrill, twilio). An alert can be sent based on some predefined rule.
-  - For monitoring the usage of the application, a `Node` file called `monitor.js` was written which would monitor the `webapp.js` every 2 seconds through the setinterval function and would extract the memory and CPU utilization values by using the follwing two commands:
+  - For monitoring the usage of the application, a `Node` file called `monitor.js` was written which would monitor the `webapp.js` every 2 seconds through the setinterval function and would extract the memory and CPU utilization values by using the follwing two commands: <br/><br/>
   ```
     ps aux | grep webapp.js | grep -v grep | awk '{print $3}' 
     ps aux | grep webapp.js | grep -v grep | awk '{print $4}'
@@ -30,7 +30,7 @@ These two values were concatenated separated by a ":". The concatenated value wa
   - An email is sent to the admins regarding this high memory usage situation as well.
 
 - [x] The ability to use feature flags, serviced by a global redis store, to toggle functionality of a deployed feature in production.
-  - Feature flags are stored in a redis database that can be called by the deployed app to control access to features. For example, in [webapp.js](https://github.com/wddlz/markdown-js/blob/dev/webapp.js) a ```featureFlag``` is stored in the redis database and controls access to a function that allows you to set a message in the database. When ```featureFlag == 1``` a user can set a message to a string of their choosing, else a message is shown saying the feature is disabled. These flags can be toggeled in the redis database. <br/>
+  - Feature flags are stored in a redis database that can be called by the deployed app to control access to features. For example, in [webapp.js](https://github.com/wddlz/markdown-js/blob/dev/webapp.js) a ```featureFlag``` is stored in the redis database and controls access to a function that allows you to set a message in the database. When ```featureFlag == 1``` a user can set a message to a string of their choosing, else a message is shown saying the feature is disabled. These flags can be toggeled in the redis database. <br/><br/>
   ![functionscreen](http://i.imgur.com/eyZlg7j.png)
 
 - [x] The ability to perform a canary release: Using a proxy/load balancer server, route a percentage of traffic to a newly staged version of software and remaining traffic to a stable version of software. Stop routing traffic to canary if alert is raised.
