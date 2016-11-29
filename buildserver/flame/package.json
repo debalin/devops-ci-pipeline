@@ -37,7 +37,8 @@
   ],
   "dependencies": {
     "json-loader": "^0.5.4",
-    "nopt": "~3.0.6"
+    "nopt": "~3.0.6",
+    "xmldom": "^0.1.27"
   },
   "devDependencies": {
     "amdefine": "~1.0.0",
@@ -52,7 +53,8 @@
     "request": "^2.54.0",
     "express": "^4.12.3",
     "multer": "^0.1.8",
-    "redis": "^0.12.1"
+    "redis": "^0.12.1",
+    "svgutils": "^0.13.6"
   },
   "engines": {
     "node": ">=0.10.0"

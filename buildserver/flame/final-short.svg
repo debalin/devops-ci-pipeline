@@ -7,6 +7,14 @@
 		<stop stop-color="#eeeeee" offset="5%" />
 		<stop stop-color="#eeeeb0" offset="95%" />
 	</linearGradient>
+<linearGradient id="alert" y1="0" y2="1" x1="0" x2="0" >
+<stop stop-color="#ff9b6f" offset="100%" />
+<stop stop-color="#ffe0b8" offset="0%" />
+</linearGradient><linearGradient id="safe" y1="0" y2="1" x1="0" x2="0" >
+<stop stop-color="#8cd7a4" offset="100%" />
+<stop stop-color="#ba9f97" offset="0%" />
+</linearGradient>
+
 </defs>
 <style type="text/css">
 	.func_g:hover { stroke:black; stroke-width:0.5; cursor:pointer; }
@@ -331,6 +339,10 @@
 ]]>
 </script>
 <rect x="0.0" y="0" width="1200.0" height="706.0" fill="url(#background)"  />
+<rect x="0" y="0" width="1200" height="802" fill="url(#safe)"  />
+
+<rect x='0' y='0' width='1400' height='3' fill='#ffffff' rx='2' ry='2' />
+
 <text text-anchor="middle" x="600.00" y="24" font-size="17" font-family="Verdana" fill="rgb(0,0,0)"  >Flame Graph</text>
 <text text-anchor="" x="10.00" y="689" font-size="12" font-family="Verdana" fill="rgb(0,0,0)" id="details" > </text>
 <text text-anchor="" x="10.00" y="24" font-size="12" font-family="Verdana" fill="rgb(0,0,0)" id="unzoom" onclick="unzoom()" style="opacity:0.0;cursor:pointer" >Reset Zoom</text>
