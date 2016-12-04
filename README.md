@@ -42,6 +42,25 @@ We have to run the webapp with the option `--perf-basic-prof` for `perf` to capt
 
 This whole step can be further automated if wanted (as possible future work), to have a flamegraph log like our build history log which would hold the modified flamegraphs for every request to the webapp in a list. Developers can then have a look at that list in runtime and see if their deployed change contains long method chains or not. 
 
+### Results
+
+![Normal method calls before addIndicator.js](http://i.imgur.com/43KFWXM.png)
+
+Normal method calls before addIndicator.js
+
+![Long method chains before addIndicator.js](http://i.imgur.com/KXcVY4i.png)
+
+Long method chains before addIndicator.js
+
+![Normal method calls after addIndicator.js](http://i.imgur.com/6o0O3Vv.png)
+
+Normal method calls after addIndicator.js
+
+![Long method chains after addIndicator.js](http://i.imgur.com/8BSh7BO.png)
+
+Long method chains after addIndicator.js
+
+
 ### Screencast
 
 https://www.youtube.com/watch?v=fNkCK1dtZ9s&feature=youtu.be
